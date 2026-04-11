@@ -1,0 +1,60 @@
+{
+  "name": "@msishamim/create-next-monorepo",
+  "version": "2.0.0",
+  "description": "Generate production-ready Next.js + NestJS/Express monorepos with Turborepo in one command",
+  "author": "MSI Shamim <im.msishamim@gmail.com>",
+  "license": "MIT",
+  "type": "module",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "bin": {
+    "create-next-monorepo": "bin/cli.js"
+  },
+  "files": [
+    "dist",
+    "bin"
+  ],
+  "scripts": {
+    "build": "tsup",
+    "dev": "tsx src/cli.ts",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "prepublishOnly": "npm run build"
+  },
+  "engines": {
+    "node": ">=18"
+  },
+  "keywords": [
+    "nextjs",
+    "nestjs",
+    "monorepo",
+    "turborepo",
+    "generator",
+    "scaffold",
+    "cli",
+    "fullstack",
+    "react",
+    "typescript"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/msi-shamim/create-next-monorepo.git"
+  },
+  "homepage": "https://github.com/msi-shamim/create-next-monorepo#readme",
+  "bugs": {
+    "url": "https://github.com/msi-shamim/create-next-monorepo/issues"
+  },
+  "dependencies": {
+    "chalk": "^5.4.1",
+    "commander": "^13.1.0",
+    "execa": "^9.5.2",
+    "ora": "^8.2.0"
+  },
+  "devDependencies": {
+    "@types/node": "^22.15.3",
+    "tsup": "^8.4.0",
+    "tsx": "^4.19.4",
+    "typescript": "^5.8.3",
+    "vitest": "^3.1.2"
+  }
+}
