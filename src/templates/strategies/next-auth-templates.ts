@@ -3,7 +3,7 @@
  */
 
 import type { ProjectConfig } from '../../project-config.js';
-import type { AuthStrategy } from './auth-strategy.js';
+import type { AuthStrategy } from './auth-strategy';
 
 export class NextAuthTemplateStrategy implements AuthStrategy {
   apiRoute(): string {

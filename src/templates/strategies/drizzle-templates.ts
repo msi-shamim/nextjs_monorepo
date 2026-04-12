@@ -3,7 +3,7 @@
  */
 
 import type { ProjectConfig } from '../../project-config.js';
-import type { ORMStrategy } from './orm-strategy.js';
+import type { ORMStrategy } from './orm-strategy';
 
 export class DrizzleTemplateStrategy implements ORMStrategy {
   packageJson(config: ProjectConfig): string {
@@ -73,8 +73,8 @@ ${driverDepsStr}
   }
 
   index(): string {
-    return `export { db } from './client.js';
-export * from './schema/index.js';
+    return `export { db } from './client';
+export * from './schema/index';
 `;
   }
 
@@ -150,7 +150,7 @@ export type NewUser = typeof users.$inferInsert;
       case 'postgres':
         return `import { drizzle } from 'drizzle-orm/node-postgres';
 import pg from 'pg';
-import * as schema from './schema/index.js';
+import * as schema from './schema/index';
 
 const pool = new pg.Pool({
   connectionString: process.env.DATABASE_URL,
@@ -162,7 +162,7 @@ export const db = drizzle(pool, { schema });
       case 'mysql':
         return `import { drizzle } from 'drizzle-orm/mysql2';
 import mysql from 'mysql2/promise';
-import * as schema from './schema/index.js';
+import * as schema from './schema/index';
 
 const connection = await mysql.createConnection({
   uri: process.env.DATABASE_URL,
@@ -174,7 +174,7 @@ export const db = drizzle(connection, { schema, mode: 'default' });
       case 'sqlite':
         return `import { drizzle } from 'drizzle-orm/better-sqlite3';
 import Database from 'better-sqlite3';
-import * as schema from './schema/index.js';
+import * as schema from './schema/index';
 
 const sqlite = new Database(process.env.DATABASE_URL?.replace('file:', '') ?? 'dev.db');
 export const db = drizzle(sqlite, { schema });
@@ -183,7 +183,7 @@ export const db = drizzle(sqlite, { schema });
       default:
         return `import { drizzle } from 'drizzle-orm/node-postgres';
 import pg from 'pg';
-import * as schema from './schema/index.js';
+import * as schema from './schema/index';
 
 const pool = new pg.Pool({
   connectionString: process.env.DATABASE_URL,
@@ -195,8 +195,8 @@ export const db = drizzle(pool, { schema });
   }
 
   seedFile(): string {
-    return `import { db } from './client.js';
-import { users } from './schema/index.js';
+    return `import { db } from './client';
+import { users } from './schema/index';
 
 async function main() {
   console.log('🌱 Seeding database...');

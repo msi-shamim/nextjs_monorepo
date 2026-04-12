@@ -24,10 +24,10 @@ export function rootPackageJson(config: ProjectConfig): string {
   "version": "1.0.0",
   "private": true,${workspaces}
   "scripts": {
-    "build": "${config.runCommand} build",
-    "dev": "${config.runCommand} dev",
-    "lint": "${config.runCommand} lint",
-    "test": "${config.runCommand} test",
+    "build": "turbo build",
+    "dev": "turbo dev",
+    "lint": "turbo lint",
+    "test": "turbo test",
     "format": "prettier --write \\"**/*.{ts,tsx,js,jsx,json,md}\\"",
     "format:check": "prettier --check \\"**/*.{ts,tsx,js,jsx,json,md}\\""
   },

@@ -2,14 +2,14 @@
  * Redux Toolkit state management strategy.
  */
 
-import type { StateStrategy } from './state-strategy.js';
+import type { StateStrategy } from './state-strategy';
 
 export class ReduxTemplateStrategy implements StateStrategy {
   storeSetup(): string {
     return `import { configureStore } from '@reduxjs/toolkit';
 import { useDispatch, useSelector } from 'react-redux';
 import type { TypedUseSelectorHook } from 'react-redux';
-import { themeReducer } from './theme-slice.js';
+import { themeReducer } from './theme-slice';
 
 export const store = configureStore({
   reducer: {

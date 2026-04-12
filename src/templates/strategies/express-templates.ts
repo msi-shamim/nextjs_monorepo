@@ -3,7 +3,7 @@
  */
 
 import type { ProjectConfig } from '../../project-config.js';
-import type { BackendStrategy } from './backend-strategy.js';
+import type { BackendStrategy } from './backend-strategy';
 
 export class ExpressTemplateStrategy implements BackendStrategy {
   packageJson(config: ProjectConfig): string {
@@ -52,7 +52,7 @@ export class ExpressTemplateStrategy implements BackendStrategy {
   }
 
   mainEntry(config: ProjectConfig): string {
-    return `import { createApp } from './app.js';
+    return `import { createApp } from './app';
 
 const port = process.env.PORT ?? 3001;
 
@@ -67,9 +67,9 @@ app.listen(port, () => {
   appSetup(_config: ProjectConfig): string {
     return `import express from 'express';
 import cors from 'cors';
-import { healthRouter } from './routes/health.js';
-import { errorHandler } from './common/filters/error-handler.js';
-import { requestLogger } from './common/interceptors/request-logger.js';
+import { healthRouter } from './routes/health';
+import { errorHandler } from './common/filters/error-handler';
+import { requestLogger } from './common/interceptors/request-logger';
 
 export function createApp() {
   const app = express();

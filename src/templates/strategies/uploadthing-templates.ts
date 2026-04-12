@@ -1,5 +1,5 @@
 import type { ProjectConfig } from '../../project-config.js';
-import type { StorageStrategy } from './storage-strategy.js';
+import type { StorageStrategy } from './storage-strategy';
 
 export class UploadThingTemplateStrategy implements StorageStrategy {
   packageJson(config: ProjectConfig): string {
@@ -25,7 +25,7 @@ export class UploadThingTemplateStrategy implements StorageStrategy {
   }
 
   index(_config: ProjectConfig): string {
-    return `export { utapi } from './client.js';
+    return `export { utapi } from './client';
 `;
   }
 
@@ -40,12 +40,12 @@ export const utapi = new UTApi();
     return `// UploadThing handles uploads via file router (see apps/web/app/api/uploadthing/)
 // Use the utapi for server-side file operations
 
-export { utapi } from './client.js';
+export { utapi } from './client';
 `;
   }
 
   downloadService(_config: ProjectConfig): string {
-    return `import { utapi } from './client.js';
+    return `import { utapi } from './client';
 
 /** Get file URLs from UploadThing */
 export async function getFileUrls(fileKeys: string[]) {

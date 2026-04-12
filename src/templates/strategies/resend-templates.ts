@@ -1,5 +1,5 @@
 import type { ProjectConfig } from '../../project-config.js';
-import type { EmailStrategy } from './email-strategy.js';
+import type { EmailStrategy } from './email-strategy';
 
 export class ResendTemplateStrategy implements EmailStrategy {
   packageJson(config: ProjectConfig): string {
@@ -26,8 +26,8 @@ export class ResendTemplateStrategy implements EmailStrategy {
   }
 
   index(_config: ProjectConfig): string {
-    return `export { sendEmail } from './send.js';
-export { resend } from './client.js';
+    return `export { sendEmail } from './send';
+export { resend } from './client';
 `;
   }
 
@@ -39,7 +39,7 @@ export const resend = new Resend(process.env.RESEND_API_KEY);
   }
 
   sendFunction(_config: ProjectConfig): string {
-    return `import { resend } from './client.js';
+    return `import { resend } from './client';
 
 interface SendEmailOptions {
   to: string | string[];

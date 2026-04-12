@@ -1,5 +1,5 @@
 import type { ProjectConfig } from '../../project-config.js';
-import type { EmailStrategy } from './email-strategy.js';
+import type { EmailStrategy } from './email-strategy';
 
 export class SendGridTemplateStrategy implements EmailStrategy {
   packageJson(config: ProjectConfig): string {
@@ -24,8 +24,8 @@ export class SendGridTemplateStrategy implements EmailStrategy {
   }
 
   index(_config: ProjectConfig): string {
-    return `export { sendEmail } from './send.js';
-export { sgMail } from './client.js';
+    return `export { sendEmail } from './send';
+export { sgMail } from './client';
 `;
   }
 
@@ -39,7 +39,7 @@ export { sgMail };
   }
 
   sendFunction(_config: ProjectConfig): string {
-    return `import { sgMail } from './client.js';
+    return `import { sgMail } from './client';
 
 interface SendEmailOptions {
   to: string | string[];

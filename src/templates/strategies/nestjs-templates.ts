@@ -3,7 +3,7 @@
  */
 
 import type { ProjectConfig } from '../../project-config.js';
-import type { BackendStrategy } from './backend-strategy.js';
+import type { BackendStrategy } from './backend-strategy';
 
 export class NestjsTemplateStrategy implements BackendStrategy {
   packageJson(config: ProjectConfig): string {
@@ -53,9 +53,9 @@ export class NestjsTemplateStrategy implements BackendStrategy {
   mainEntry(config: ProjectConfig): string {
     return `import { NestFactory } from '@nestjs/core';
 import { ValidationPipe } from '@nestjs/common';
-import { AppModule } from './app.module.js';
-import { HttpExceptionFilter } from './common/filters/http-exception.filter.js';
-import { LoggingInterceptor } from './common/interceptors/logging.interceptor.js';
+import { AppModule } from './app.module';
+import { HttpExceptionFilter } from './common/filters/http-exception.filter';
+import { LoggingInterceptor } from './common/interceptors/logging.interceptor';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
@@ -81,8 +81,8 @@ bootstrap();
 
   appSetup(_config: ProjectConfig): string {
     return `import { Module } from '@nestjs/common';
-import { AppController } from './app.controller.js';
-import { AppService } from './app.service.js';
+import { AppController } from './app.controller';
+import { AppService } from './app.service';
 
 @Module({
   imports: [],
@@ -95,7 +95,7 @@ export class AppModule {}
 
   appController(_config: ProjectConfig): string {
     return `import { Controller, Get } from '@nestjs/common';
-import { AppService } from './app.service.js';
+import { AppService } from './app.service';
 
 @Controller()
 export class AppController {

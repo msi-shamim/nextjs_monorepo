@@ -1,5 +1,5 @@
 import type { ProjectConfig } from '../../project-config.js';
-import type { PaymentStrategy } from './payment-strategy.js';
+import type { PaymentStrategy } from './payment-strategy';
 
 export class StripeTemplateStrategy implements PaymentStrategy {
   packageJson(config: ProjectConfig): string {
@@ -24,10 +24,10 @@ export class StripeTemplateStrategy implements PaymentStrategy {
   }
 
   index(_config: ProjectConfig): string {
-    return `export { stripe } from './client.js';
-export { createCheckoutSession } from './checkout.js';
-export { handleWebhook } from './webhook.js';
-export { getSubscription, cancelSubscription } from './subscription.js';
+    return `export { stripe } from './client';
+export { createCheckoutSession } from './checkout';
+export { handleWebhook } from './webhook';
+export { getSubscription, cancelSubscription } from './subscription';
 `;
   }
 
@@ -43,7 +43,7 @@ export const stripe = new Stripe(process.env.STRIPE_SECRET_KEY ?? '', {
 
   webhookHandler(_config: ProjectConfig): string {
     return `import type Stripe from 'stripe';
-import { stripe } from './client.js';
+import { stripe } from './client';
 
 /** Verify and handle a Stripe webhook event */
 export async function handleWebhook(body: string | Buffer, signature: string) {
@@ -86,7 +86,7 @@ export async function handleWebhook(body: string | Buffer, signature: string) {
   }
 
   checkout(_config: ProjectConfig): string {
-    return `import { stripe } from './client.js';
+    return `import { stripe } from './client';
 
 interface CreateCheckoutOptions {
   priceId: string;
@@ -124,7 +124,7 @@ export async function createCheckoutSession({
   }
 
   subscription(_config: ProjectConfig): string {
-    return `import { stripe } from './client.js';
+    return `import { stripe } from './client';
 
 /** Get a customer's active subscription */
 export async function getSubscription(customerId: string) {

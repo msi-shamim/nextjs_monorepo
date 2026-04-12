@@ -1,5 +1,5 @@
 import type { ProjectConfig } from '../../project-config.js';
-import type { StorageStrategy } from './storage-strategy.js';
+import type { StorageStrategy } from './storage-strategy';
 
 export class S3TemplateStrategy implements StorageStrategy {
   packageJson(config: ProjectConfig): string {
@@ -25,9 +25,9 @@ export class S3TemplateStrategy implements StorageStrategy {
   }
 
   index(_config: ProjectConfig): string {
-    return `export { s3Client } from './client.js';
-export { uploadFile, getUploadUrl } from './upload.js';
-export { getDownloadUrl } from './download.js';
+    return `export { s3Client } from './client';
+export { uploadFile, getUploadUrl } from './upload';
+export { getDownloadUrl } from './download';
 `;
   }
 
@@ -50,7 +50,7 @@ export const BUCKET_NAME = process.env.S3_BUCKET ?? 'uploads';
   uploadService(_config: ProjectConfig): string {
     return `import { PutObjectCommand } from '@aws-sdk/client-s3';
 import { getSignedUrl } from '@aws-sdk/s3-request-presigner';
-import { s3Client, BUCKET_NAME } from './client.js';
+import { s3Client, BUCKET_NAME } from './client';
 
 /** Upload a file buffer directly to S3 */
 export async function uploadFile(key: string, body: Buffer, contentType: string) {
@@ -82,7 +82,7 @@ export async function getUploadUrl(key: string, contentType: string, expiresIn =
   downloadService(_config: ProjectConfig): string {
     return `import { GetObjectCommand } from '@aws-sdk/client-s3';
 import { getSignedUrl } from '@aws-sdk/s3-request-presigner';
-import { s3Client, BUCKET_NAME } from './client.js';
+import { s3Client, BUCKET_NAME } from './client';
 
 /** Generate a presigned download URL */
 export async function getDownloadUrl(key: string, expiresIn = 3600) {

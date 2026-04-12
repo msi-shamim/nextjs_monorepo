@@ -2,7 +2,7 @@
  * Jotai state management strategy.
  */
 
-import type { StateStrategy } from './state-strategy.js';
+import type { StateStrategy } from './state-strategy';
 
 export class JotaiTemplateStrategy implements StateStrategy {
   storeSetup(): string {
@@ -11,7 +11,7 @@ export class JotaiTemplateStrategy implements StateStrategy {
  * Jotai is atomic — no provider needed (uses default store).
  */
 
-export { themeAtom } from './theme-atom.js';
+export { themeAtom } from './theme-atom';
 `;
   }
 

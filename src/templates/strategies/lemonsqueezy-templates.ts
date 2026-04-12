@@ -1,5 +1,5 @@
 import type { ProjectConfig } from '../../project-config.js';
-import type { PaymentStrategy } from './payment-strategy.js';
+import type { PaymentStrategy } from './payment-strategy';
 
 export class LemonSqueezyTemplateStrategy implements PaymentStrategy {
   packageJson(config: ProjectConfig): string {
@@ -21,10 +21,10 @@ export class LemonSqueezyTemplateStrategy implements PaymentStrategy {
   }
 
   index(_config: ProjectConfig): string {
-    return `export { lemonSqueezySetup } from './client.js';
-export { createCheckout } from './checkout.js';
-export { handleWebhook } from './webhook.js';
-export { getSubscription, cancelSubscription } from './subscription.js';
+    return `export { lemonSqueezySetup } from './client';
+export { createCheckout } from './checkout';
+export { handleWebhook } from './webhook';
+export { getSubscription, cancelSubscription } from './subscription';
 `;
   }
 
@@ -77,7 +77,7 @@ export async function handleWebhook(body: string, signature: string) {
 
   checkout(_config: ProjectConfig): string {
     return `import { createCheckout as lsCreateCheckout } from '@lemonsqueezy/lemonsqueezy.js';
-import { lemonSqueezySetup } from './client.js';
+import { lemonSqueezySetup } from './client';
 
 interface CreateCheckoutOptions {
   variantId: number;
@@ -109,7 +109,7 @@ export async function createCheckout({ variantId, email, name }: CreateCheckoutO
 
   subscription(_config: ProjectConfig): string {
     return `import { getSubscription as lsGetSubscription, cancelSubscription as lsCancelSubscription } from '@lemonsqueezy/lemonsqueezy.js';
-import { lemonSqueezySetup } from './client.js';
+import { lemonSqueezySetup } from './client';
 
 /** Get subscription details */
 export async function getSubscription(subscriptionId: string) {

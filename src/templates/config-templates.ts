@@ -7,7 +7,7 @@ import type { ProjectConfig } from '../project-config.js';
 /** packages/config/package.json */
 export function configPackageJson(config: ProjectConfig): string {
   const tailwindExport = config.usesTailwind
-    ? `\n    "./tailwind": "./tailwind/base.js",`
+    ? `,\n    "./tailwind": "./tailwind/base.js"`
     : '';
 
   return `{

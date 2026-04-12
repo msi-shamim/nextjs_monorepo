@@ -44,8 +44,8 @@ export function cacheTsConfig(config: ProjectConfig): string {
 
 /** packages/cache/src/index.ts */
 export function cacheIndex(): string {
-  return `export { redis } from './client.js';
-export { CacheService } from './service.js';
+  return `export { redis } from './client';
+export { CacheService } from './service';
 `;
 }
 
@@ -75,7 +75,7 @@ if (process.env.NODE_ENV !== 'production') {
 
 /** packages/cache/src/service.ts */
 export function cacheService(): string {
-  return `import { redis } from './client.js';
+  return `import { redis } from './client';
 
 /** Simple cache wrapper around Redis with JSON serialization and TTL support */
 export class CacheService {

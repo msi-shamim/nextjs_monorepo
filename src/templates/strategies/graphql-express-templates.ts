@@ -1,5 +1,5 @@
 import type { ProjectConfig } from '../../project-config.js';
-import type { ApiStyleStrategy } from './api-style-strategy.js';
+import type { ApiStyleStrategy } from './api-style-strategy';
 
 export class GraphqlExpressTemplateStrategy implements ApiStyleStrategy {
   serverFiles(config: ProjectConfig): Record<string, string> {
@@ -7,9 +7,9 @@ export class GraphqlExpressTemplateStrategy implements ApiStyleStrategy {
       'apps/api/src/graphql/server.ts': `import { ApolloServer } from '@apollo/server';
 import { expressMiddleware } from '@as-integrations/express';
 import type { Express } from 'express';
-import { typeDefs } from './typeDefs.js';
-import { resolvers } from './resolvers/health.resolver.js';
-import type { GraphQLContext } from './context.js';
+import { typeDefs } from './typeDefs';
+import { resolvers } from './resolvers/health.resolver';
+import type { GraphQLContext } from './context';
 
 export async function setupGraphQL(app: Express) {
   const server = new ApolloServer<GraphQLContext>({
@@ -87,7 +87,7 @@ export { resolvers };
   setupInstructions(_config: ProjectConfig): string {
     return `// GraphQL (Express + Apollo):
 // Import in apps/api/src/app.ts:
-//   import { setupGraphQL } from './graphql/server.js';
+//   import { setupGraphQL } from './graphql/server';
 //   await setupGraphQL(app);
 //
 // GraphQL endpoint: http://localhost:3001/graphql

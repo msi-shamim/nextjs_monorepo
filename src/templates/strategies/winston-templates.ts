@@ -1,5 +1,5 @@
 import type { ProjectConfig } from '../../project-config.js';
-import type { LoggingStrategy } from './logging-strategy.js';
+import type { LoggingStrategy } from './logging-strategy';
 
 export class WinstonTemplateStrategy implements LoggingStrategy {
   loggerSetup(_config: ProjectConfig): string {
@@ -33,7 +33,7 @@ export function createLogger(context: string) {
   }
 
   index(_config: ProjectConfig): string {
-    return `export { logger, createLogger } from './logger.js';
+    return `export { logger, createLogger } from './logger';
 `;
   }
 }

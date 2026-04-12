@@ -45,10 +45,10 @@ export function libTsConfig(): string {
 
 /** packages/lib/src/index.ts — barrel export */
 export function libIndex(): string {
-  return `export * from './types/index.js';
-export * from './utils/index.js';
-export * from './constants/index.js';
-export * from './validators/index.js';
+  return `export * from './types/index';
+export * from './utils/index';
+export * from './constants/index';
+export * from './validators/index';
 `;
 }
 

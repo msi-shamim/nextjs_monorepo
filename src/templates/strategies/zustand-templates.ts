@@ -2,7 +2,7 @@
  * Zustand state management strategy.
  */
 
-import type { StateStrategy } from './state-strategy.js';
+import type { StateStrategy } from './state-strategy';
 
 export class ZustandTemplateStrategy implements StateStrategy {
   storeSetup(): string {
@@ -11,7 +11,7 @@ export class ZustandTemplateStrategy implements StateStrategy {
  * Zustand requires no provider — stores are used directly via hooks.
  */
 
-export { useThemeStore } from './theme-store.js';
+export { useThemeStore } from './theme-store';
 `;
   }
 

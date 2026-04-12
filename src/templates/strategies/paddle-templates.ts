@@ -1,5 +1,5 @@
 import type { ProjectConfig } from '../../project-config.js';
-import type { PaymentStrategy } from './payment-strategy.js';
+import type { PaymentStrategy } from './payment-strategy';
 
 export class PaddleTemplateStrategy implements PaymentStrategy {
   packageJson(config: ProjectConfig): string {
@@ -21,10 +21,10 @@ export class PaddleTemplateStrategy implements PaymentStrategy {
   }
 
   index(_config: ProjectConfig): string {
-    return `export { paddle } from './client.js';
-export { createCheckout } from './checkout.js';
-export { handleWebhook } from './webhook.js';
-export { getSubscription, cancelSubscription } from './subscription.js';
+    return `export { paddle } from './client';
+export { createCheckout } from './checkout';
+export { handleWebhook } from './webhook';
+export { getSubscription, cancelSubscription } from './subscription';
 `;
   }
 
@@ -40,7 +40,7 @@ export const paddle = new Paddle(process.env.PADDLE_API_KEY ?? '', {
   }
 
   webhookHandler(_config: ProjectConfig): string {
-    return `import { paddle } from './client.js';
+    return `import { paddle } from './client';
 
 /** Verify and handle a Paddle webhook event */
 export async function handleWebhook(body: string, signature: string) {
@@ -72,7 +72,7 @@ export async function handleWebhook(body: string, signature: string) {
   }
 
   checkout(_config: ProjectConfig): string {
-    return `import { paddle } from './client.js';
+    return `import { paddle } from './client';
 
 interface CreateCheckoutOptions {
   priceId: string;
@@ -94,7 +94,7 @@ export async function createCheckout({ priceId, customerId, customerEmail }: Cre
   }
 
   subscription(_config: ProjectConfig): string {
-    return `import { paddle } from './client.js';
+    return `import { paddle } from './client';
 
 /** Get subscription details */
 export async function getSubscription(subscriptionId: string) {

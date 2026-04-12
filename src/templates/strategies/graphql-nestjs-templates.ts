@@ -1,5 +1,5 @@
 import type { ProjectConfig } from '../../project-config.js';
-import type { ApiStyleStrategy } from './api-style-strategy.js';
+import type { ApiStyleStrategy } from './api-style-strategy';
 
 export class GraphqlNestjsTemplateStrategy implements ApiStyleStrategy {
   serverFiles(_config: ProjectConfig): Record<string, string> {
@@ -8,7 +8,7 @@ export class GraphqlNestjsTemplateStrategy implements ApiStyleStrategy {
 import { GraphQLModule } from '@nestjs/graphql';
 import { ApolloDriver, ApolloDriverConfig } from '@nestjs/apollo';
 import { join } from 'node:path';
-import { HealthResolver } from './resolvers/health.resolver.js';
+import { HealthResolver } from './resolvers/health.resolver';
 
 @Module({
   imports: [
@@ -65,7 +65,7 @@ export class HealthModel {
   setupInstructions(_config: ProjectConfig): string {
     return `// GraphQL (NestJS + Apollo):
 // Import GqlModule in apps/api/src/app.module.ts:
-//   import { GqlModule } from './graphql/graphql.module.js';
+//   import { GqlModule } from './graphql/graphql.module';
 //   @Module({ imports: [GqlModule] })
 //
 // GraphQL Playground: http://localhost:3001/graphql

@@ -1,5 +1,5 @@
 import type { ProjectConfig } from '../../project-config.js';
-import type { StorageStrategy } from './storage-strategy.js';
+import type { StorageStrategy } from './storage-strategy';
 
 export class CloudinaryTemplateStrategy implements StorageStrategy {
   packageJson(config: ProjectConfig): string {
@@ -24,9 +24,9 @@ export class CloudinaryTemplateStrategy implements StorageStrategy {
   }
 
   index(_config: ProjectConfig): string {
-    return `export { cloudinary } from './client.js';
-export { uploadFile } from './upload.js';
-export { getOptimizedUrl, getTransformUrl } from './download.js';
+    return `export { cloudinary } from './client';
+export { uploadFile } from './upload';
+export { getOptimizedUrl, getTransformUrl } from './download';
 `;
   }
 
@@ -44,7 +44,7 @@ export { cloudinary };
   }
 
   uploadService(_config: ProjectConfig): string {
-    return `import { cloudinary } from './client.js';
+    return `import { cloudinary } from './client';
 
 interface UploadOptions {
   folder?: string;
@@ -97,7 +97,7 @@ export async function uploadBuffer(
   }
 
   downloadService(_config: ProjectConfig): string {
-    return `import { cloudinary } from './client.js';
+    return `import { cloudinary } from './client';
 
 /** Get an optimized URL for an image */
 export function getOptimizedUrl(publicId: string, options: { width?: number; height?: number; quality?: string } = {}) {

@@ -1,5 +1,5 @@
 import type { ProjectConfig } from '../../project-config.js';
-import type { EmailStrategy } from './email-strategy.js';
+import type { EmailStrategy } from './email-strategy';
 
 export class NodemailerTemplateStrategy implements EmailStrategy {
   packageJson(config: ProjectConfig): string {
@@ -25,8 +25,8 @@ export class NodemailerTemplateStrategy implements EmailStrategy {
   }
 
   index(_config: ProjectConfig): string {
-    return `export { sendEmail } from './send.js';
-export { transporter } from './client.js';
+    return `export { sendEmail } from './send';
+export { transporter } from './client';
 `;
   }
 
@@ -46,7 +46,7 @@ export const transporter = nodemailer.createTransport({
   }
 
   sendFunction(_config: ProjectConfig): string {
-    return `import { transporter } from './client.js';
+    return `import { transporter } from './client';
 
 interface SendEmailOptions {
   to: string | string[];

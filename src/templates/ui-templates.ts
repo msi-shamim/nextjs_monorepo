@@ -54,21 +54,21 @@ export function uiTsConfig(config: ProjectConfig): string {
 
 /** packages/ui/src/index.ts — barrel export */
 export function uiIndex(): string {
-  return `export * from './components/index.js';
-export * from './hooks/index.js';
+  return `export * from './components/index';
+export * from './hooks/index';
 `;
 }
 
 /** packages/ui/src/components/index.ts — component barrel */
 export function uiComponentsIndex(): string {
-  return `export { Button } from './button.js';
-export type { ButtonProps } from './button.js';
+  return `export { Button } from './button';
+export type { ButtonProps } from './button';
 
-export { Card } from './card.js';
-export type { CardProps } from './card.js';
+export { Card } from './card';
+export type { CardProps } from './card';
 
-export { Input } from './input.js';
-export type { InputProps } from './input.js';
+export { Input } from './input';
+export type { InputProps } from './input';
 `;
 }
 
@@ -511,8 +511,8 @@ export function uiInputCss(): string {
 
 /** packages/ui/src/hooks/index.ts — hooks barrel */
 export function uiHooksIndex(): string {
-  return `export { useMediaQuery } from './use-media-query.js';
-export { useDebounce } from './use-debounce.js';
+  return `export { useMediaQuery } from './use-media-query';
+export { useDebounce } from './use-debounce';
 `;
 }
 

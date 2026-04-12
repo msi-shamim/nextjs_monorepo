@@ -3,7 +3,7 @@
  */
 
 import type { ProjectConfig } from '../../project-config.js';
-import type { StateStrategy } from './state-strategy.js';
+import type { StateStrategy } from './state-strategy';
 
 export class TanstackQueryTemplateStrategy implements StateStrategy {
   storeSetup(): string {
@@ -11,8 +11,8 @@ export class TanstackQueryTemplateStrategy implements StateStrategy {
  * TanStack Query setup and utilities.
  */
 
-export { queryClient } from './query-client.js';
-export { QueryProvider } from './provider.js';
+export { queryClient } from './query-client';
+export { QueryProvider } from './provider';
 `;
   }
 

@@ -1,5 +1,5 @@
 import type { ProjectConfig } from '../../project-config.js';
-import type { ApiDocsStrategy } from './api-docs-strategy.js';
+import type { ApiDocsStrategy } from './api-docs-strategy';
 
 export class SwaggerTemplateStrategy implements ApiDocsStrategy {
   docsConfig(config: ProjectConfig): string {
@@ -59,7 +59,7 @@ export const swaggerSpec = swaggerJsdoc(options);
   docsSetup(config: ProjectConfig): string {
     if (config.backend === 'nestjs') {
       return `// Add to apps/api/src/main.ts:
-// import { setupSwagger } from './docs/swagger-config.js';
+// import { setupSwagger } from './docs/swagger-config';
 // setupSwagger(app);
 //
 // Swagger UI will be available at: http://localhost:3001/api/docs
@@ -68,7 +68,7 @@ export const swaggerSpec = swaggerJsdoc(options);
 
     return `import swaggerUi from 'swagger-ui-express';
 import type { Express } from 'express';
-import { swaggerSpec } from './swagger-config.js';
+import { swaggerSpec } from './swagger-config';
 
 export function setupDocs(app: Express) {
   app.use('/api/docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec, {

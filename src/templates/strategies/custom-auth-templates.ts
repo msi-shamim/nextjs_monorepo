@@ -2,7 +2,7 @@
  * Custom JWT auth strategy — generates custom authentication files.
  */
 
-import type { AuthStrategy } from './auth-strategy.js';
+import type { AuthStrategy } from './auth-strategy';
 
 export class CustomAuthTemplateStrategy implements AuthStrategy {
   apiRoute(): string {

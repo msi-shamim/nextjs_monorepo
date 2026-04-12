@@ -1,12 +1,12 @@
 import type { ProjectConfig } from '../../project-config.js';
-import type { ApiStyleStrategy } from './api-style-strategy.js';
+import type { ApiStyleStrategy } from './api-style-strategy';
 
 export class TrpcNestjsTemplateStrategy implements ApiStyleStrategy {
   serverFiles(config: ProjectConfig): Record<string, string> {
     return {
       'apps/api/src/trpc/trpc.ts': `import { initTRPC } from '@trpc/server';
 import superjson from 'superjson';
-import type { Context } from './context.js';
+import type { Context } from './context';
 
 const t = initTRPC.context<Context>().create({
   transformer: superjson,
@@ -23,7 +23,7 @@ export const protectedProcedure = t.procedure.use(async ({ ctx, next }) => {
 `,
 
       'apps/api/src/trpc/router.ts': `import { z } from 'zod';
-import { router, publicProcedure } from './trpc.js';
+import { router, publicProcedure } from './trpc';
 
 export const appRouter = router({
   health: publicProcedure.query(() => ({
@@ -62,8 +62,8 @@ export function createContext({ req }: { req: Request }): Context {
 
       'apps/api/src/trpc/adapter.ts': `import * as trpcExpress from '@trpc/server/adapters/express';
 import type { INestApplication } from '@nestjs/common';
-import { appRouter } from './router.js';
-import { createContext } from './context.js';
+import { appRouter } from './router';
+import { createContext } from './context';
 
 /** Mount tRPC as Express middleware inside NestJS */
 export function setupTrpc(app: INestApplication) {
@@ -88,7 +88,7 @@ export function setupTrpc(app: INestApplication) {
   setupInstructions(_config: ProjectConfig): string {
     return `// tRPC (NestJS):
 // In apps/api/src/main.ts, after app creation:
-//   import { setupTrpc } from './trpc/adapter.js';
+//   import { setupTrpc } from './trpc/adapter';
 //   setupTrpc(app);
 //
 // tRPC endpoint: http://localhost:3001/api/trpc

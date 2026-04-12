@@ -1,5 +1,5 @@
 import type { ProjectConfig } from '../../project-config.js';
-import type { ApiDocsStrategy } from './api-docs-strategy.js';
+import type { ApiDocsStrategy } from './api-docs-strategy';
 
 export class RedocTemplateStrategy implements ApiDocsStrategy {
   docsConfig(config: ProjectConfig): string {
@@ -45,7 +45,7 @@ export const swaggerSpec = swaggerJsdoc(options);
     if (config.backend === 'nestjs') {
       return `import type { INestApplication } from '@nestjs/common';
 import redoc from 'redoc-express';
-import { getOpenApiDocument } from './swagger-config.js';
+import { getOpenApiDocument } from './swagger-config';
 
 export function setupDocs(app: INestApplication) {
   const httpAdapter = app.getHttpAdapter();
@@ -68,7 +68,7 @@ export function setupDocs(app: INestApplication) {
 
     return `import redoc from 'redoc-express';
 import type { Express } from 'express';
-import { swaggerSpec } from './swagger-config.js';
+import { swaggerSpec } from './swagger-config';
 
 export function setupDocs(app: Express) {
   app.get('/api/docs/openapi.json', (_req, res) => {

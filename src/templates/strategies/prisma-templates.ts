@@ -3,7 +3,7 @@
  */
 
 import type { ProjectConfig } from '../../project-config.js';
-import type { ORMStrategy } from './orm-strategy.js';
+import type { ORMStrategy } from './orm-strategy';
 
 export class PrismaTemplateStrategy implements ORMStrategy {
   packageJson(config: ProjectConfig): string {
@@ -51,7 +51,7 @@ export class PrismaTemplateStrategy implements ORMStrategy {
   }
 
   index(): string {
-    return `export { db } from './client.js';
+    return `export { db } from './client';
 `;
   }
 
@@ -124,7 +124,7 @@ if (process.env.NODE_ENV !== 'production') {
   }
 
   seedFile(): string {
-    return `import { db } from './client.js';
+    return `import { db } from './client';
 
 async function main() {
   console.log('🌱 Seeding database...');
