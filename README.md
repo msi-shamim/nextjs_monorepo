@@ -12,6 +12,7 @@ Generate **production-ready Next.js + NestJS/Express monorepos** with Turborepo 
 
 - **Next.js 15** with App Router — pages, layouts, loading/error states
 - **Backend choice** — NestJS (modules, controllers, services) or Express (routes, services)
+- **API style** — REST (default), GraphQL (Apollo Server), or tRPC (end-to-end type-safe)
 - **Styling choice** — Tailwind CSS, CSS Modules, or Styled Components
 - **Database ORM** — Prisma or Drizzle with schema, client, seed, and migrations
 - **Authentication** — NextAuth.js v5 or custom JWT with middleware
@@ -62,6 +63,7 @@ Creates a monorepo with NestJS, Tailwind, Prisma + Postgres, NextAuth, Zustand, 
 ```bash
 npx @msishamim/create-next-monorepo my-app \
   --backend express \
+  --api-style graphql \
   --styling css-modules \
   --orm drizzle \
   --db mysql \
@@ -83,6 +85,7 @@ npx @msishamim/create-next-monorepo my-app --orm none --auth none --state none
 | Flag | Values | Default | Description |
 |------|--------|---------|-------------|
 | `--backend, -b` | `nestjs`, `express` | `nestjs` | Backend framework |
+| `--api-style` | `rest`, `graphql`, `trpc` | `rest` | API style (layers on top of backend) |
 | `--styling, -s` | `tailwind`, `css-modules`, `styled-components` | `tailwind` | Styling approach |
 | `--orm` | `prisma`, `drizzle`, `none` | `prisma` | Database ORM |
 | `--db` | `postgres`, `mysql`, `sqlite`, `mongodb` | `postgres` | Database type (when ORM is set) |
@@ -207,6 +210,15 @@ my-app/
 | DI | Built-in (decorators) | Manual |
 | Validation | Pipes (Zod integration) | Middleware (Zod integration) |
 | Best for | Large apps, enterprise | Lightweight APIs, microservices |
+
+### API Style
+
+| Feature | REST | GraphQL (Apollo) | tRPC |
+|---------|------|-----------------|------|
+| Protocol | HTTP methods | Single endpoint | RPC over HTTP |
+| Schema | OpenAPI (optional) | GraphQL SDL | TypeScript types |
+| Client | fetch / axios | Apollo Client | Type-safe hooks |
+| Best for | Standard APIs | Complex data graphs | Full-stack TypeScript |
 
 ### Styling
 

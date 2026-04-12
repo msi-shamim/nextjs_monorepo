@@ -2,6 +2,23 @@
 
 All notable changes to this project will be documented in this file.
 
+## 2.1.0 (2026-04-12)
+
+### New Option
+
+- **`--api-style`** (`rest` | `graphql` | `trpc`) — API protocol/style that layers on top of `--backend`
+  - **GraphQL**: Apollo Server with code-first resolvers (NestJS) or schema-first (Express)
+  - **tRPC**: Full type-safe stack — server router, NestJS/Express adapter, Next.js client hooks, provider, server caller, API route handler
+  - **REST**: Default, unchanged behavior
+  - All 6 backend + style combinations supported and tested
+
+### Improvements
+
+- 27-step generation pipeline (up from 26)
+- 22 CLI options total
+
+---
+
 ## 2.0.0 (2026-04-11)
 
 10 new CLI options for production-ready features.

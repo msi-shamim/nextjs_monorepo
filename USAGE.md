@@ -64,6 +64,50 @@ npx @msishamim/create-next-monorepo my-app \
 
 Styled Components for a design system approach, Jotai for atomic state.
 
+### tRPC Full-Stack
+
+```bash
+npx @msishamim/create-next-monorepo my-app \
+  --backend nestjs \
+  --api-style trpc \
+  --orm prisma \
+  --auth next-auth \
+  --state none
+```
+
+tRPC with NestJS — end-to-end type safety, no need for separate state management (tRPC hooks handle server state).
+
+### GraphQL API
+
+```bash
+npx @msishamim/create-next-monorepo my-app \
+  --backend express \
+  --api-style graphql \
+  --orm drizzle
+```
+
+Express + Apollo Server + Drizzle for a lightweight GraphQL backend.
+
+---
+
+## API Style Comparison
+
+### REST (default)
+Standard HTTP methods (GET, POST, PUT, DELETE). Works with any client. Best for public APIs and simple CRUD.
+
+### GraphQL (Apollo)
+Single `/graphql` endpoint. Clients request exactly the data they need. Best for complex data relationships and multiple consumers.
+
+- **NestJS**: Code-first with `@nestjs/graphql` + `@nestjs/apollo` — decorators, resolvers, ObjectType models
+- **Express**: Schema-first with `@apollo/server` + `expressMiddleware` — typeDefs, resolvers, context
+
+### tRPC
+End-to-end type-safe RPC. No schema generation, no code generation — just TypeScript. Best for full-stack TypeScript monorepos where frontend and backend share types.
+
+- **Server**: Router with procedures (`query`, `mutation`), Zod input validation, context-based auth
+- **Client**: React hooks via `@trpc/react-query`, server-side caller for RSC, `TrpcProvider` wrapper
+- **Generated files**: Server router + adapter + Next.js client + provider + API route handler
+
 ---
 
 ## Backend Comparison
