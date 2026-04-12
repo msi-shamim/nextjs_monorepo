@@ -1,6 +1,6 @@
 {
   "name": "@msishamim/create-next-monorepo",
-  "version": "2.0.0",
+  "version": "2.1.0",
   "description": "Generate production-ready Next.js + NestJS/Express monorepos with Turborepo in one command",
   "author": "MSI Shamim <im.msishamim@gmail.com>",
   "license": "MIT",
