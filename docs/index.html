@@ -1,0 +1,1027 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>create-next-monorepo — Documentation</title>
+  <meta name="description" content="Generate production-ready Next.js + NestJS/Express monorepos in one command. 22 configurable options, 27-step pipeline, zero boilerplate.">
+  <style>
+    /* ── Anthropic-inspired Theme ── */
+    :root {
+      --bg: #FAFAF8;
+      --bg-code: #F0EFEB;
+      --bg-card: #FFFFFF;
+      --bg-nav: #1A1A1A;
+      --text: #1A1A1A;
+      --text-secondary: #5A5A58;
+      --text-muted: #8A8A88;
+      --text-nav: #E8E5E0;
+      --accent: #D4A27F;
+      --accent-hover: #C4896A;
+      --border: #E5E3DE;
+      --border-light: #EDEBE6;
+      --success: #4A8C6F;
+      --info: #5B7FA5;
+      --warning: #C4956A;
+      --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      --font-mono: 'JetBrains Mono', 'Fira Code', 'SF Mono', Consolas, monospace;
+      --max-width: 780px;
+      --radius: 8px;
+    }
+
+    @media (prefers-color-scheme: dark) {
+      :root {
+        --bg: #1A1A1A;
+        --bg-code: #252525;
+        --bg-card: #222222;
+        --bg-nav: #111111;
+        --text: #E8E5E0;
+        --text-secondary: #B0AEA8;
+        --text-muted: #7A7A78;
+        --text-nav: #E8E5E0;
+        --border: #333330;
+        --border-light: #2A2A28;
+      }
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    html { scroll-behavior: smooth; scroll-padding-top: 80px; }
+
+    body {
+      font-family: var(--font-sans);
+      color: var(--text);
+      background: var(--bg);
+      line-height: 1.7;
+      font-size: 16px;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* ── Navigation ── */
+    nav {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      background: var(--bg-nav);
+      color: var(--text-nav);
+      z-index: 100;
+      border-bottom: 1px solid rgba(255,255,255,0.08);
+    }
+
+    nav .nav-inner {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 24px;
+      height: 60px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    nav .logo {
+      font-size: 17px;
+      font-weight: 600;
+      letter-spacing: -0.3px;
+      color: var(--text-nav);
+      text-decoration: none;
+    }
+
+    nav .logo span { color: var(--accent); }
+
+    nav .nav-links {
+      display: flex;
+      gap: 28px;
+      list-style: none;
+    }
+
+    nav .nav-links a {
+      color: var(--text-muted);
+      text-decoration: none;
+      font-size: 14px;
+      font-weight: 450;
+      transition: color 0.2s;
+    }
+
+    nav .nav-links a:hover { color: var(--text-nav); }
+
+    /* ── Sidebar TOC (desktop) ── */
+    .layout {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 80px 24px 60px;
+      display: flex;
+      gap: 48px;
+    }
+
+    .sidebar {
+      position: sticky;
+      top: 80px;
+      width: 220px;
+      flex-shrink: 0;
+      height: calc(100vh - 100px);
+      overflow-y: auto;
+      padding: 20px 0;
+    }
+
+    .sidebar h4 {
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 1.2px;
+      color: var(--text-muted);
+      margin-bottom: 12px;
+      font-weight: 600;
+    }
+
+    .sidebar ul {
+      list-style: none;
+      margin-bottom: 24px;
+    }
+
+    .sidebar ul li a {
+      display: block;
+      padding: 5px 0;
+      font-size: 13.5px;
+      color: var(--text-secondary);
+      text-decoration: none;
+      border-left: 2px solid transparent;
+      padding-left: 12px;
+      transition: all 0.15s;
+    }
+
+    .sidebar ul li a:hover {
+      color: var(--text);
+      border-left-color: var(--accent);
+    }
+
+    .content {
+      flex: 1;
+      min-width: 0;
+      max-width: var(--max-width);
+    }
+
+    /* ── Hero ── */
+    .hero {
+      padding: 60px 0 48px;
+      border-bottom: 1px solid var(--border-light);
+      margin-bottom: 48px;
+    }
+
+    .hero .badge {
+      display: inline-block;
+      background: var(--bg-code);
+      color: var(--accent);
+      font-size: 12px;
+      font-weight: 600;
+      padding: 4px 12px;
+      border-radius: 20px;
+      margin-bottom: 16px;
+      letter-spacing: 0.5px;
+    }
+
+    .hero h1 {
+      font-size: 38px;
+      font-weight: 700;
+      line-height: 1.2;
+      letter-spacing: -0.8px;
+      margin-bottom: 16px;
+    }
+
+    .hero p {
+      font-size: 18px;
+      color: var(--text-secondary);
+      line-height: 1.6;
+      max-width: 600px;
+    }
+
+    .hero .hero-install {
+      margin-top: 28px;
+      background: var(--bg-nav);
+      color: #E8E5E0;
+      padding: 16px 24px;
+      border-radius: var(--radius);
+      font-family: var(--font-mono);
+      font-size: 15px;
+      display: inline-block;
+      user-select: all;
+    }
+
+    .hero .hero-install span { color: var(--accent); }
+
+    /* ── Sections ── */
+    section {
+      margin-bottom: 56px;
+    }
+
+    h2 {
+      font-size: 26px;
+      font-weight: 650;
+      letter-spacing: -0.4px;
+      margin-bottom: 8px;
+      padding-top: 8px;
+    }
+
+    h2 .section-number {
+      color: var(--accent);
+      font-weight: 500;
+      margin-right: 4px;
+    }
+
+    h3 {
+      font-size: 19px;
+      font-weight: 600;
+      margin-top: 32px;
+      margin-bottom: 8px;
+      letter-spacing: -0.2px;
+    }
+
+    p { margin-bottom: 16px; color: var(--text-secondary); }
+
+    strong { color: var(--text); font-weight: 600; }
+
+    /* ── Code blocks ── */
+    pre {
+      background: var(--bg-code);
+      border: 1px solid var(--border-light);
+      border-radius: var(--radius);
+      padding: 18px 22px;
+      overflow-x: auto;
+      margin: 16px 0 20px;
+      font-family: var(--font-mono);
+      font-size: 13.5px;
+      line-height: 1.65;
+    }
+
+    code {
+      font-family: var(--font-mono);
+      font-size: 0.9em;
+      background: var(--bg-code);
+      padding: 2px 6px;
+      border-radius: 4px;
+    }
+
+    pre code {
+      background: none;
+      padding: 0;
+      font-size: inherit;
+    }
+
+    /* ── Tables ── */
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 16px 0 24px;
+      font-size: 14px;
+    }
+
+    th {
+      text-align: left;
+      padding: 10px 14px;
+      background: var(--bg-code);
+      font-weight: 600;
+      font-size: 12px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      color: var(--text-muted);
+      border-bottom: 2px solid var(--border);
+    }
+
+    td {
+      padding: 10px 14px;
+      border-bottom: 1px solid var(--border-light);
+      color: var(--text-secondary);
+    }
+
+    tr:last-child td { border-bottom: none; }
+
+    /* ── Callout boxes ── */
+    .callout {
+      padding: 16px 20px;
+      border-radius: var(--radius);
+      margin: 20px 0;
+      border-left: 3px solid;
+      font-size: 14px;
+    }
+
+    .callout.tip {
+      background: rgba(74, 140, 111, 0.08);
+      border-color: var(--success);
+    }
+
+    .callout.info {
+      background: rgba(91, 127, 165, 0.08);
+      border-color: var(--info);
+    }
+
+    .callout.warning {
+      background: rgba(196, 149, 106, 0.08);
+      border-color: var(--warning);
+    }
+
+    .callout strong { display: block; margin-bottom: 4px; color: var(--text); }
+
+    /* ── Option cards ── */
+    .options-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(230px, 1fr));
+      gap: 12px;
+      margin: 16px 0 24px;
+    }
+
+    .option-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border-light);
+      border-radius: var(--radius);
+      padding: 16px;
+    }
+
+    .option-card .label {
+      font-size: 12px;
+      text-transform: uppercase;
+      letter-spacing: 0.8px;
+      color: var(--text-muted);
+      font-weight: 600;
+      margin-bottom: 4px;
+    }
+
+    .option-card .value {
+      font-family: var(--font-mono);
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--accent);
+    }
+
+    .option-card .desc {
+      font-size: 13px;
+      color: var(--text-secondary);
+      margin-top: 6px;
+      line-height: 1.5;
+    }
+
+    /* ── Footer ── */
+    footer {
+      border-top: 1px solid var(--border-light);
+      padding: 40px 24px;
+      text-align: center;
+      color: var(--text-muted);
+      font-size: 14px;
+    }
+
+    footer a {
+      color: var(--accent);
+      text-decoration: none;
+    }
+
+    /* ── Responsive ── */
+    @media (max-width: 900px) {
+      .sidebar { display: none; }
+      .layout { padding: 72px 16px 40px; }
+      .hero h1 { font-size: 28px; }
+      .hero { padding: 40px 0 36px; }
+      nav .nav-links { gap: 16px; }
+      nav .nav-links a { font-size: 13px; }
+    }
+
+    @media (max-width: 600px) {
+      nav .nav-links { display: none; }
+      .options-grid { grid-template-columns: 1fr; }
+    }
+
+    /* ── Separator ── */
+    hr {
+      border: none;
+      border-top: 1px solid var(--border-light);
+      margin: 48px 0;
+    }
+
+    ul, ol { margin: 8px 0 16px 20px; color: var(--text-secondary); }
+    li { margin-bottom: 6px; }
+  </style>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;450;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+</head>
+<body>
+
+<!-- ── Navigation ── -->
+<nav>
+  <div class="nav-inner">
+    <a href="#" class="logo"><span>create-next-monorepo</span></a>
+    <ul class="nav-links">
+      <li><a href="#getting-started">Getting Started</a></li>
+      <li><a href="#features">Features</a></li>
+      <li><a href="#options">All Options</a></li>
+      <li><a href="https://www.npmjs.com/package/@msishamim/create-next-monorepo" target="_blank">npm</a></li>
+      <li><a href="https://github.com/msi-shamim/create-next-monorepo" target="_blank">GitHub</a></li>
+    </ul>
+  </div>
+</nav>
+
+<div class="layout">
+
+<!-- ── Sidebar ── -->
+<aside class="sidebar">
+  <h4>Getting Started</h4>
+  <ul>
+    <li><a href="#why">Why This Tool?</a></li>
+    <li><a href="#getting-started">Quick Start</a></li>
+    <li><a href="#project-structure">Project Structure</a></li>
+  </ul>
+  <h4>Features</h4>
+  <ul>
+    <li><a href="#feat-nextjs">1. Next.js 15</a></li>
+    <li><a href="#feat-backend">2. Backend</a></li>
+    <li><a href="#feat-api-style">3. API Style</a></li>
+    <li><a href="#feat-styling">4. Styling</a></li>
+    <li><a href="#feat-orm">5. Database ORM</a></li>
+    <li><a href="#feat-auth">6. Authentication</a></li>
+    <li><a href="#feat-state">7. State Management</a></li>
+    <li><a href="#feat-turborepo">8. Turborepo</a></li>
+    <li><a href="#feat-packages">9. Shared Packages</a></li>
+    <li><a href="#feat-versions">10. Auto Versions</a></li>
+    <li><a href="#feat-doctor">11. Doctor</a></li>
+    <li><a href="#feat-workflow">12. Workflow Guides</a></li>
+    <li><a href="#feat-skills">13. AI Skills</a></li>
+    <li><a href="#feat-github">14. GitHub Files</a></li>
+    <li><a href="#feat-docker">15. Docker</a></li>
+    <li><a href="#feat-license">16. License Types</a></li>
+    <li><a href="#feat-linting">17. Linting</a></li>
+  </ul>
+  <h4>Reference</h4>
+  <ul>
+    <li><a href="#options">All Options Table</a></li>
+    <li><a href="#examples">Example Combos</a></li>
+    <li><a href="#credits">Credits</a></li>
+  </ul>
+</aside>
+
+<!-- ── Content ── -->
+<main class="content">
+
+<!-- Hero -->
+<div class="hero" id="top">
+  <div class="badge">v2.2.0 &middot; 22 Options &middot; 27-Step Pipeline</div>
+  <h1>Production-ready monorepos<br>in one command.</h1>
+  <p>Generate a full-stack Next.js + NestJS/Express monorepo with Turborepo, your choice of ORM, auth, state management, Docker, payments, email, and more &mdash; fully configured and ready to develop.</p>
+  <div class="hero-install"><span>npx</span> @msishamim/create-next-monorepo my-app</div>
+</div>
+
+<!-- Why -->
+<section id="why">
+  <h2>Why This Tool?</h2>
+  <p>Every full-stack project starts with the same 3-5 days of boilerplate: configuring workspaces, wiring databases, setting up auth, writing Dockerfiles, configuring linters. This tool eliminates that entirely.</p>
+  <p>You answer a few questions (or use flags), and in <strong>30 seconds</strong> you have a production-grade monorepo with everything pre-configured, type-safe, and ready for <code>pnpm dev</code>.</p>
+
+  <div class="callout tip">
+    <strong>Who is this for?</strong>
+    Any developer building a full-stack TypeScript application &mdash; whether it's a SaaS, internal tool, or side project. From solo developers to teams. No monorepo experience required.
+  </div>
+</section>
+
+<hr>
+
+<!-- Getting Started -->
+<section id="getting-started">
+  <h2>Getting Started</h2>
+
+  <h3>Prerequisites</h3>
+  <ul>
+    <li><strong>Node.js</strong> version 18 or higher</li>
+    <li><strong>pnpm</strong> version 9+ (recommended) &mdash; or npm, yarn, bun</li>
+    <li><strong>Git</strong> (optional, for automatic git init)</li>
+  </ul>
+
+  <h3>Step 1: Run the generator</h3>
+  <p>The simplest way &mdash; run with all defaults (NestJS, Tailwind, Prisma, NextAuth, Zustand):</p>
+  <pre><code>npx @msishamim/create-next-monorepo my-app</code></pre>
+
+  <h3>Step 2: Navigate into your project</h3>
+  <pre><code>cd my-app</code></pre>
+
+  <h3>Step 3: Start development</h3>
+  <pre><code>pnpm dev</code></pre>
+  <p>Your frontend is at <code>http://localhost:3000</code> and your API at <code>http://localhost:3001/api</code>.</p>
+
+  <div class="callout info">
+    <strong>That's it!</strong>
+    With zero flags, you get a complete monorepo with NestJS, Tailwind CSS, Prisma + Postgres, NextAuth.js, Zustand, Vitest, and shared UI components. Everything below is optional customization.
+  </div>
+</section>
+
+<hr>
+
+<!-- Project Structure -->
+<section id="project-structure">
+  <h2>Project Structure</h2>
+  <p>Every generated project follows this structure. Packages are added or removed based on your options.</p>
+  <pre><code>my-app/
+├── apps/
+│   ├── web/              # Next.js 15 frontend (App Router)
+│   └── api/              # NestJS or Express backend
+├── packages/
+│   ├── ui/               # Shared React components (Button, Card, Input)
+│   ├── lib/              # Shared types, utils, constants, Zod validators
+│   ├── config/           # Shared ESLint, TypeScript, Tailwind configs
+│   ├── database/         # Prisma or Drizzle ORM (if enabled)
+│   ├── cache/            # Redis client + service (if enabled)
+│   ├── email/            # Email client + templates (if enabled)
+│   ├── storage/          # File upload service (if enabled)
+│   └── payments/         # Payment provider integration (if enabled)
+├── .claude/              # AI agent skills + settings
+├── turbo.json            # Turborepo pipeline config
+├── package.json          # Workspace root
+└── pnpm-workspace.yaml   # pnpm workspaces</code></pre>
+</section>
+
+<hr>
+
+<!-- ═══════════════════════════════════════════ -->
+<!-- FEATURES -->
+<!-- ═══════════════════════════════════════════ -->
+
+<section id="features">
+  <h2>Features</h2>
+  <p>Each feature below is configurable via CLI flags. Every section shows you exactly which flag to use and what it generates.</p>
+</section>
+
+<!-- 1. Next.js 15 -->
+<section id="feat-nextjs">
+  <h2><span class="section-number">01.</span> Next.js 15 with App Router</h2>
+  <p>Every project includes a Next.js 15 frontend using the App Router. This is not configurable &mdash; it's always included.</p>
+
+  <h3>What gets generated</h3>
+  <pre><code>apps/web/
+├── app/
+│   ├── layout.tsx       # Root layout with metadata
+│   ├── page.tsx         # Home page with shared UI components
+│   ├── globals.css      # Global styles
+│   ├── not-found.tsx    # 404 page
+│   ├── error.tsx        # Error boundary (client component)
+│   └── loading.tsx      # Loading spinner
+├── components/          # App-specific components
+├── hooks/               # App-specific hooks
+├── lib/                 # Auth config, state stores
+├── public/              # Static assets
+├── next.config.ts       # Next.js configuration
+└── tsconfig.json        # Extends shared TS config</code></pre>
+
+  <div class="callout tip">
+    <strong>Standalone output</strong>
+    The Next.js config is set up for standalone output mode, making it Docker-ready out of the box.
+  </div>
+</section>
+
+<!-- 2. Backend -->
+<section id="feat-backend">
+  <h2><span class="section-number">02.</span> Backend Choice</h2>
+  <p>Choose between two battle-tested Node.js frameworks for your REST API.</p>
+
+  <table>
+    <tr><th>Flag</th><th>Values</th><th>Default</th></tr>
+    <tr><td><code>--backend</code> or <code>-b</code></td><td><code>nestjs</code>, <code>express</code></td><td><code>nestjs</code></td></tr>
+  </table>
+
+  <h3>NestJS (default)</h3>
+  <pre><code>npx @msishamim/create-next-monorepo my-app --backend nestjs</code></pre>
+  <p>Generates a full NestJS application with modules, controllers, services, and decorators:</p>
+  <pre><code>apps/api/src/
+├── main.ts                                # Bootstrap with CORS, validation, filters
+├── app.module.ts                          # Root module
+├── app.controller.ts                      # Health + info endpoints
+├── app.service.ts                         # Business logic service
+└── common/
+    ├── filters/http-exception.filter.ts   # Global exception handler
+    ├── guards/auth.guard.ts               # Bearer token guard
+    ├── interceptors/logging.interceptor.ts # Request logging
+    └── pipes/zod-validation.pipe.ts       # Zod schema validation</code></pre>
+
+  <h3>Express</h3>
+  <pre><code>npx @msishamim/create-next-monorepo my-app --backend express</code></pre>
+  <p>Generates a lightweight Express application with routes, services, and middleware:</p>
+  <pre><code>apps/api/src/
+├── main.ts                                  # Server bootstrap
+├── app.ts                                   # Express app factory with middleware
+├── routes/health.ts                         # Health + info route
+├── services/app.service.ts                  # Service class
+└── common/
+    ├── filters/error-handler.ts             # Error handling middleware
+    ├── guards/auth.guard.ts                 # Auth middleware function
+    ├── interceptors/request-logger.ts       # Logging middleware
+    └── pipes/validate.ts                    # Zod validation middleware</code></pre>
+</section>
+
+<!-- 3. API Style -->
+<section id="feat-api-style">
+  <h2><span class="section-number">03.</span> API Style</h2>
+  <p>Choose how your backend exposes its API. This <strong>layers on top</strong> of your backend choice &mdash; all combinations work.</p>
+
+  <table>
+    <tr><th>Flag</th><th>Values</th><th>Default</th></tr>
+    <tr><td><code>--api-style</code></td><td><code>rest</code>, <code>graphql</code>, <code>trpc</code></td><td><code>rest</code></td></tr>
+  </table>
+
+  <h3>REST (default)</h3>
+  <p>No extra flag needed. Your backend already generates REST endpoints.</p>
+  <pre><code>npx @msishamim/create-next-monorepo my-app</code></pre>
+
+  <h3>GraphQL (Apollo Server)</h3>
+  <pre><code>npx @msishamim/create-next-monorepo my-app --api-style graphql</code></pre>
+  <p>Adds Apollo Server with resolvers, models (NestJS code-first) or typeDefs (Express schema-first). Access the playground at <code>/graphql</code>.</p>
+
+  <h3>tRPC (End-to-End Type Safety)</h3>
+  <pre><code>npx @msishamim/create-next-monorepo my-app --api-style trpc</code></pre>
+  <p>Generates the full tRPC stack &mdash; server router with example procedures, NestJS/Express adapter, <strong>and</strong> the Next.js client with typed hooks, provider, and server-side caller.</p>
+  <pre><code># Server (apps/api/src/trpc/)
+trpc.ts         # initTRPC instance
+router.ts       # Root appRouter with procedures
+context.ts      # Request context
+adapter.ts      # NestJS or Express adapter
+
+# Client (apps/web/)
+lib/trpc/client.ts      # createTRPCReact hooks
+lib/trpc/provider.tsx   # TrpcProvider wrapper
+lib/trpc/server.ts      # Server-side caller for RSC
+app/api/trpc/[trpc]/route.ts  # API route handler</code></pre>
+</section>
+
+<!-- 4. Styling -->
+<section id="feat-styling">
+  <h2><span class="section-number">04.</span> Styling</h2>
+  <p>Choose your CSS approach. All shared UI components in <code>packages/ui/</code> adapt to your choice.</p>
+
+  <table>
+    <tr><th>Flag</th><th>Values</th><th>Default</th></tr>
+    <tr><td><code>--styling</code> or <code>-s</code></td><td><code>tailwind</code>, <code>css-modules</code>, <code>styled-components</code></td><td><code>tailwind</code></td></tr>
+  </table>
+
+  <h3>Tailwind CSS (default)</h3>
+  <pre><code>npx @msishamim/create-next-monorepo my-app --styling tailwind</code></pre>
+  <p>Generates Tailwind v4 config, PostCSS setup, and utility-class-based components.</p>
+
+  <h3>CSS Modules</h3>
+  <pre><code>npx @msishamim/create-next-monorepo my-app --styling css-modules</code></pre>
+  <p>Generates <code>.module.css</code> files alongside each component (button.module.css, card.module.css, etc.).</p>
+
+  <h3>Styled Components</h3>
+  <pre><code>npx @msishamim/create-next-monorepo my-app --styling styled-components</code></pre>
+  <p>Generates CSS-in-JS components using tagged template literals with transient props.</p>
+</section>
+
+<!-- 5. Database ORM -->
+<section id="feat-orm">
+  <h2><span class="section-number">05.</span> Database ORM</h2>
+  <p>Choose your database layer. Both ORMs generate a schema, client singleton, and seed script.</p>
+
+  <table>
+    <tr><th>Flag</th><th>Values</th><th>Default</th></tr>
+    <tr><td><code>--orm</code></td><td><code>prisma</code>, <code>drizzle</code>, <code>none</code></td><td><code>prisma</code></td></tr>
+    <tr><td><code>--db</code></td><td><code>postgres</code>, <code>mysql</code>, <code>sqlite</code>, <code>mongodb</code></td><td><code>postgres</code></td></tr>
+  </table>
+
+  <h3>Prisma (default)</h3>
+  <pre><code>npx @msishamim/create-next-monorepo my-app --orm prisma --db postgres</code></pre>
+  <p>Generates <code>packages/database/</code> with Prisma schema, client, and seed:</p>
+  <pre><code># Run migrations
+cd packages/database
+npx prisma migrate dev --name init
+
+# Open Prisma Studio
+npx prisma studio</code></pre>
+
+  <h3>Drizzle</h3>
+  <pre><code>npx @msishamim/create-next-monorepo my-app --orm drizzle --db postgres</code></pre>
+  <p>Generates TypeScript-native schema definitions with inferred types:</p>
+  <pre><code># Push schema to database
+cd packages/database
+npx drizzle-kit push
+
+# Open Drizzle Studio
+npx drizzle-kit studio</code></pre>
+
+  <h3>No database</h3>
+  <pre><code>npx @msishamim/create-next-monorepo my-app --orm none</code></pre>
+
+  <div class="callout info">
+    <strong>Docker integration</strong>
+    When a database is selected, a <code>docker-compose.yml</code> is generated with the correct DB service (Postgres, MySQL, or MongoDB) for local development.
+  </div>
+</section>
+
+<!-- 6. Authentication -->
+<section id="feat-auth">
+  <h2><span class="section-number">06.</span> Authentication</h2>
+
+  <table>
+    <tr><th>Flag</th><th>Values</th><th>Default</th></tr>
+    <tr><td><code>--auth</code></td><td><code>next-auth</code>, <code>custom</code>, <code>none</code></td><td><code>next-auth</code></td></tr>
+  </table>
+
+  <h3>NextAuth.js v5 (default)</h3>
+  <pre><code>npx @msishamim/create-next-monorepo my-app --auth next-auth</code></pre>
+  <p>Generates NextAuth v5 config with provider placeholders, session strategy, middleware protection, and type declarations. If Prisma or Drizzle is enabled, the appropriate adapter (<code>@auth/prisma-adapter</code> or <code>@auth/drizzle-adapter</code>) is automatically wired.</p>
+
+  <h3>Custom JWT</h3>
+  <pre><code>npx @msishamim/create-next-monorepo my-app --auth custom</code></pre>
+  <p>Generates a custom JWT auth system with login API route, middleware for protected routes, cookie-based sessions, and auth types.</p>
+
+  <h3>No authentication</h3>
+  <pre><code>npx @msishamim/create-next-monorepo my-app --auth none</code></pre>
+</section>
+
+<!-- 7. State Management -->
+<section id="feat-state">
+  <h2><span class="section-number">07.</span> State Management</h2>
+
+  <table>
+    <tr><th>Flag</th><th>Values</th><th>Default</th></tr>
+    <tr><td><code>--state</code></td><td><code>zustand</code>, <code>jotai</code>, <code>redux</code>, <code>tanstack-query</code>, <code>none</code></td><td><code>zustand</code></td></tr>
+  </table>
+
+  <h3>Zustand (default)</h3>
+  <pre><code>npx @msishamim/create-next-monorepo my-app --state zustand</code></pre>
+  <p>No provider needed. Creates a theme store with persistence.</p>
+
+  <h3>Jotai</h3>
+  <pre><code>npx @msishamim/create-next-monorepo my-app --state jotai</code></pre>
+  <p>Atomic state with <code>atomWithStorage</code> for persistence.</p>
+
+  <h3>Redux Toolkit</h3>
+  <pre><code>npx @msishamim/create-next-monorepo my-app --state redux</code></pre>
+  <p>Generates store, slice, typed hooks, and <code>&lt;StoreProvider&gt;</code> wrapper in layout.</p>
+
+  <h3>TanStack Query</h3>
+  <pre><code>npx @msishamim/create-next-monorepo my-app --state tanstack-query</code></pre>
+  <p>Server state management with <code>QueryClient</code>, example query, and <code>&lt;QueryProvider&gt;</code> wrapper.</p>
+</section>
+
+<!-- 8. Turborepo -->
+<section id="feat-turborepo">
+  <h2><span class="section-number">08.</span> Turborepo + pnpm Workspaces</h2>
+  <p>Every project uses <strong>Turborepo</strong> for build orchestration with task caching and parallel execution. This is always included.</p>
+
+  <table>
+    <tr><th>Flag</th><th>Values</th><th>Default</th></tr>
+    <tr><td><code>--package-manager</code></td><td><code>pnpm</code>, <code>npm</code>, <code>yarn</code>, <code>bun</code></td><td><code>pnpm</code></td></tr>
+  </table>
+
+  <pre><code># Common commands (run from project root)
+pnpm dev          # Start all apps in development
+pnpm build        # Build all apps and packages
+pnpm lint         # Lint everything
+pnpm test         # Run all tests
+pnpm format       # Format with Prettier</code></pre>
+</section>
+
+<!-- 9. Shared Packages -->
+<section id="feat-packages">
+  <h2><span class="section-number">09.</span> Shared Packages</h2>
+  <p>Every project gets three shared packages that both apps import. This is always included.</p>
+
+  <h3>packages/ui &mdash; React Components</h3>
+  <p>Pre-built <strong>Button</strong>, <strong>Card</strong>, and <strong>Input</strong> components with variant/size props. Plus <code>useMediaQuery</code> and <code>useDebounce</code> hooks.</p>
+  <pre><code>import { Button, Card } from '@my-app/ui';</code></pre>
+
+  <h3>packages/lib &mdash; Utilities &amp; Types</h3>
+  <p>Shared TypeScript types (<code>ApiResponse</code>, <code>Result&lt;T&gt;</code>), utility functions (<code>formatDate</code>, <code>slugify</code>), constants (<code>HttpStatus</code>), and Zod validators (<code>emailSchema</code>, <code>paginationSchema</code>).</p>
+  <pre><code>import { ok, err } from '@my-app/lib/types';
+import { emailSchema } from '@my-app/lib/validators';</code></pre>
+
+  <h3>packages/config &mdash; Shared Configs</h3>
+  <p>Base ESLint (flat config), TypeScript (base, Next.js, Node presets), and Tailwind configs. All apps extend these.</p>
+</section>
+
+<!-- 10. Auto Version Resolution -->
+<section id="feat-versions">
+  <h2><span class="section-number">10.</span> Auto Version Resolution</h2>
+  <p>At generation time, the CLI fetches the <strong>latest compatible version</strong> of every dependency from the npm registry. If you're offline, it falls back to tested hardcoded versions.</p>
+  <p>This means your generated project always starts with up-to-date dependencies &mdash; no stale package versions.</p>
+</section>
+
+<!-- 11. Doctor -->
+<section id="feat-doctor">
+  <h2><span class="section-number">11.</span> Doctor Command</h2>
+  <p>Validate your monorepo's structure at any time. The doctor checks 100-170 directories and files (depending on your config) and reports what's missing.</p>
+
+  <h3>Check structure</h3>
+  <pre><code>npx @msishamim/create-next-monorepo doctor</code></pre>
+
+  <h3>Auto-fix missing items</h3>
+  <pre><code>npx @msishamim/create-next-monorepo doctor --fix</code></pre>
+  <p>Restorable files (README, LICENSE, configs, utilities, hooks) are regenerated with full template content. Non-restorable files get empty placeholders.</p>
+
+  <div class="callout tip">
+    <strong>Config auto-detection</strong>
+    Doctor automatically detects your project's config by reading package.json dependencies, schema files, and file structures. No manual config needed.
+  </div>
+</section>
+
+<!-- 12. Workflow -->
+<section id="feat-workflow">
+  <h2><span class="section-number">12.</span> Workflow Guides</h2>
+  <p>Step-by-step development guides that adapt to your detected project configuration.</p>
+
+  <pre><code># Overview of all workflows
+npx @msishamim/create-next-monorepo workflow
+
+# A: Build a reusable UI component
+npx @msishamim/create-next-monorepo workflow a
+
+# B: Build a Next.js page with state + API
+npx @msishamim/create-next-monorepo workflow b
+
+# C: Build a backend API endpoint
+npx @msishamim/create-next-monorepo workflow c</code></pre>
+
+  <p>Each guide prints file paths, code snippets, and checklists specific to your stack. For example, Workflow C shows NestJS module/controller/service if you're using NestJS, or Express route/service if you're using Express.</p>
+</section>
+
+<!-- 13. AI Skills -->
+<section id="feat-skills">
+  <h2><span class="section-number">13.</span> AI Agent Skills</h2>
+  <p>Every project gets <strong>Claude Code skills</strong> in <code>.claude/skills/</code> &mdash; pre-written instructions that teach AI how to build features in your specific monorepo.</p>
+
+  <table>
+    <tr><th>Skill</th><th>Trigger</th></tr>
+    <tr><td>Component Design</td><td>"Build a component", "Create a reusable UI element"</td></tr>
+    <tr><td>Page Design</td><td>"Build a page", "Create a route"</td></tr>
+    <tr><td>API Feature</td><td>"Add an API endpoint", "Create a backend feature"</td></tr>
+    <tr><td>Monorepo Doctor</td><td>"Check structure", "What's missing"</td></tr>
+  </table>
+
+  <p>A <code>.claude/settings.json</code> is also generated with pre-approved safe commands (read tools, lint, test, build).</p>
+</section>
+
+<!-- 14. GitHub -->
+<section id="feat-github">
+  <h2><span class="section-number">14.</span> GitHub Community Files</h2>
+
+  <table>
+    <tr><th>Flag</th><th>Values</th><th>Default</th></tr>
+    <tr><td><code>--github</code></td><td>boolean</td><td><code>false</code></td></tr>
+  </table>
+
+  <pre><code>npx @msishamim/create-next-monorepo my-app --github</code></pre>
+  <p>Generates:</p>
+  <ul>
+    <li><strong>CI workflow</strong> (<code>.github/workflows/ci.yml</code>) &mdash; Turborepo-aware lint + build pipeline</li>
+    <li><strong>Issue templates</strong> &mdash; Bug report and feature request with YAML frontmatter</li>
+    <li><strong>PR template</strong> &mdash; Checklist for changes, testing, and review</li>
+    <li><strong>Code of Conduct</strong> &mdash; Contributor Covenant v2.1</li>
+    <li><strong>Funding</strong> &mdash; GitHub Sponsors placeholder</li>
+  </ul>
+</section>
+
+<!-- 15. Docker -->
+<section id="feat-docker">
+  <h2><span class="section-number">15.</span> Docker</h2>
+  <p>Docker templates are <strong>fully adaptive</strong> &mdash; they adjust to every option you've selected.</p>
+
+  <table>
+    <tr><th>Flag</th><th>Values</th><th>Default</th></tr>
+    <tr><td><code>--docker</code></td><td><code>full</code>, <code>minimal</code>, <code>none</code></td><td><code>none</code></td></tr>
+  </table>
+
+  <h3>Full mode</h3>
+  <pre><code>npx @msishamim/create-next-monorepo my-app --docker full</code></pre>
+  <p>Multi-stage Dockerfiles, nginx reverse proxy, health checks:</p>
+  <ul>
+    <li><strong>Dockerfiles</strong> adapt to package manager, Prisma generate, correct build commands</li>
+    <li><strong>docker-compose.prod.yml</strong> includes DB service (postgres/mysql/mongodb), Redis, nginx, all env vars</li>
+    <li><strong>nginx.conf</strong> routes <code>/graphql</code>, <code>/api/trpc</code>, <code>/api/docs</code> with WebSocket support</li>
+  </ul>
+
+  <h3>Minimal mode</h3>
+  <pre><code>npx @msishamim/create-next-monorepo my-app --docker minimal</code></pre>
+  <p>Simple single-stage Dockerfiles + basic docker-compose. No nginx. Still adaptive to DB, Redis, and Prisma.</p>
+</section>
+
+<!-- 16. License -->
+<section id="feat-license">
+  <h2><span class="section-number">16.</span> License Types</h2>
+
+  <table>
+    <tr><th>Flag</th><th>Default</th></tr>
+    <tr><td><code>--license</code></td><td><code>MIT</code></td></tr>
+  </table>
+
+  <p>11 supported license types:</p>
+  <pre><code>--license MIT
+--license Apache-2.0
+--license BSD-2-Clause
+--license BSD-3-Clause
+--license GPL-2.0
+--license GPL-3.0
+--license LGPL-2.1
+--license MPL-2.0
+--license ISC
+--license Unlicense
+--license proprietary</code></pre>
+</section>
+
+<!-- 17. Linting -->
+<section id="feat-linting">
+  <h2><span class="section-number">17.</span> Production Linting</h2>
+  <p>Every project ships with strict, production-grade linting. This is always included.</p>
+  <ul>
+    <li><strong>TypeScript</strong> &mdash; strict mode, noUnusedLocals, noFallthroughCasesInSwitch</li>
+    <li><strong>ESLint</strong> &mdash; Flat config with <code>@typescript-eslint</code>, consistent-type-imports, no-console</li>
+    <li><strong>Prettier</strong> &mdash; Single quotes, trailing commas, 100 char width</li>
+  </ul>
+  <pre><code>pnpm lint          # ESLint check
+pnpm format        # Prettier format
+pnpm format:check  # Prettier check (CI)</code></pre>
+</section>
+
+<hr>
+
+<!-- All Options -->
+<section id="options">
+  <h2>All Options Reference</h2>
+
+  <table>
+    <tr><th>Flag</th><th>Values</th><th>Default</th></tr>
+    <tr><td><code>--backend, -b</code></td><td>nestjs, express</td><td>nestjs</td></tr>
+    <tr><td><code>--api-style</code></td><td>rest, graphql, trpc</td><td>rest</td></tr>
+    <tr><td><code>--styling, -s</code></td><td>tailwind, css-modules, styled-components</td><td>tailwind</td></tr>
+    <tr><td><code>--orm</code></td><td>prisma, drizzle, none</td><td>prisma</td></tr>
+    <tr><td><code>--db</code></td><td>postgres, mysql, sqlite, mongodb</td><td>postgres</td></tr>
+    <tr><td><code>--auth</code></td><td>next-auth, custom, none</td><td>next-auth</td></tr>
+    <tr><td><code>--state</code></td><td>zustand, jotai, redux, tanstack-query, none</td><td>zustand</td></tr>
+    <tr><td><code>--testing</code></td><td>vitest, jest</td><td>vitest</td></tr>
+    <tr><td><code>--docker</code></td><td>full, minimal, none</td><td>none</td></tr>
+    <tr><td><code>--i18n</code></td><td>next-intl, none</td><td>none</td></tr>
+    <tr><td><code>--payments</code></td><td>stripe, lemonsqueezy, paddle, none</td><td>none</td></tr>
+    <tr><td><code>--email</code></td><td>resend, nodemailer, sendgrid, none</td><td>none</td></tr>
+    <tr><td><code>--api-docs</code></td><td>swagger, redoc, none</td><td>none</td></tr>
+    <tr><td><code>--storage</code></td><td>s3, uploadthing, cloudinary, none</td><td>none</td></tr>
+    <tr><td><code>--e2e</code></td><td>playwright, cypress, none</td><td>none</td></tr>
+    <tr><td><code>--storybook</code></td><td>boolean</td><td>false</td></tr>
+    <tr><td><code>--cache</code></td><td>redis, none</td><td>none</td></tr>
+    <tr><td><code>--logging</code></td><td>pino, winston, default</td><td>default</td></tr>
+    <tr><td><code>--license</code></td><td>MIT, Apache-2.0, GPL-3.0, ...</td><td>MIT</td></tr>
+    <tr><td><code>--git / --no-git</code></td><td>boolean</td><td>true</td></tr>
+    <tr><td><code>--github</code></td><td>boolean</td><td>false</td></tr>
+    <tr><td><code>--package-manager</code></td><td>pnpm, npm, yarn, bun</td><td>pnpm</td></tr>
+  </table>
+</section>
+
+<hr>
+
+<!-- Examples -->
+<section id="examples">
+  <h2>Example Combinations</h2>
+
+  <h3>Minimal (no extras)</h3>
+  <pre><code>npx @msishamim/create-next-monorepo my-app \
+  --orm none --auth none --state none</code></pre>
+
+  <h3>Full SaaS</h3>
+  <pre><code>npx @msishamim/create-next-monorepo my-saas \
+  --backend nestjs \
+  --api-style trpc \
+  --orm prisma --db postgres \
+  --auth next-auth \
+  --state zustand \
+  --payments stripe \
+  --email resend \
+  --storage s3 \
+  --cache redis \
+  --docker full \
+  --i18n next-intl \
+  --e2e playwright \
+  --storybook \
+  --logging pino \
+  --api-docs swagger \
+  --github</code></pre>
+
+  <h3>Lightweight API</h3>
+  <pre><code>npx @msishamim/create-next-monorepo my-api \
+  --backend express \
+  --api-style graphql \
+  --orm drizzle --db sqlite \
+  --auth none --state none</code></pre>
+</section>
+
+<hr>
+
+<!-- Credits -->
+<section id="credits">
+  <h2>Credits &amp; License</h2>
+  <p>Built by <strong>MSI Shamim</strong> &mdash; <a href="https://github.com/msi-shamim" target="_blank">GitHub</a> &middot; <a href="mailto:im.msishamim@gmail.com">Email</a></p>
+  <p>MIT License. Open source. Contributions welcome.</p>
+  <p>Published on npm as <a href="https://www.npmjs.com/package/@msishamim/create-next-monorepo" target="_blank">@msishamim/create-next-monorepo</a>.</p>
+
+  <div class="callout info">
+    <strong>Architecture inspired by</strong>
+    <a href="https://pub.dev/packages/flutter_monorepo" target="_blank">flutter_monorepo</a> &mdash; the same author's Dart CLI for generating Flutter monorepos. Both tools share the same strategy-pattern architecture, doctor/workflow commands, and AI skills system.
+  </div>
+</section>
+
+</main>
+</div>
+
+<footer>
+  <p>&copy; 2026 MSI Shamim &middot; <a href="https://www.npmjs.com/package/@msishamim/create-next-monorepo">npm</a> &middot; <a href="https://github.com/msi-shamim/create-next-monorepo">GitHub</a></p>
+</footer>
+
+</body>
+</html>
