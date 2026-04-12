@@ -2,6 +2,17 @@
 
 All notable changes to this project will be documented in this file.
 
+## 2.2.1 (2026-04-12)
+
+### Bug Fixes
+
+- **Fix JSON parse error** in generated `packages/config/package.json` — missing comma before conditional tailwind export (#1)
+- **Fix `.js` extensions** in barrel exports — Turbopack cannot resolve `.js` to `.ts/.tsx`, removed from all 29 template files (#1)
+- **Fix recursive scripts** in root `package.json` — `pnpm dev` called itself infinitely, now uses `turbo build/dev/lint/test` (#1)
+- Added 12 regression tests for all 3 bugs
+
+---
+
 ## 2.2.0 (2026-04-12)
 
 ### Fully Adaptive Docker Templates
