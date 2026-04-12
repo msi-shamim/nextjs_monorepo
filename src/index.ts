@@ -14,6 +14,7 @@ export {
   TestFramework,
   PackageManager,
   LicenseType,
+  ApiStyle,
   Docker,
   I18n,
   Payments,

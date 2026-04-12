@@ -37,6 +37,7 @@ program
   .option('--no-git', 'Skip git initialization')
   .option('--github', 'Generate GitHub community files', false)
   .option('--package-manager <pm>', 'Package manager: pnpm, npm, yarn, bun', 'pnpm')
+  .option('--api-style <style>', 'API style: rest, graphql, trpc', 'rest')
   .option('--docker <mode>', 'Docker: full, minimal, none', 'none')
   .option('--i18n <lib>', 'i18n: next-intl, none', 'none')
   .option('--payments <provider>', 'Payments: stripe, lemonsqueezy, paddle, none', 'none')
@@ -79,6 +80,7 @@ program
       ['state', options.state as string, validStates],
       ['testing', options.testing as string, validTesting],
       ['package-manager', options.packageManager as string, validPms],
+      ['api-style', options.apiStyle as string, ['rest', 'graphql', 'trpc']],
       ['docker', options.docker as string, ['full', 'minimal', 'none']],
       ['i18n', options.i18n as string, ['next-intl', 'none']],
       ['payments', options.payments as string, ['stripe', 'lemonsqueezy', 'paddle', 'none']],
@@ -112,6 +114,7 @@ program
       packageManager: options.packageManager as ProjectConfig['packageManager'],
       gitInit: options.git as boolean,
       githubFiles: options.github as boolean,
+      apiStyle: options.apiStyle as ProjectConfig['apiStyle'],
       docker: options.docker as ProjectConfig['docker'],
       i18n: options.i18n as ProjectConfig['i18n'],
       payments: options.payments as ProjectConfig['payments'],

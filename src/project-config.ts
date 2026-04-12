@@ -77,6 +77,9 @@ export type Docker = (typeof Docker)[keyof typeof Docker];
 export const I18n = { nextIntl: 'next-intl', none: 'none' } as const;
 export type I18n = (typeof I18n)[keyof typeof I18n];
 
+export const ApiStyle = { rest: 'rest', graphql: 'graphql', trpc: 'trpc' } as const;
+export type ApiStyle = (typeof ApiStyle)[keyof typeof ApiStyle];
+
 export const Payments = {
   stripe: 'stripe',
   lemonsqueezy: 'lemonsqueezy',
@@ -146,6 +149,12 @@ export const authDisplayName: Record<Auth, string> = {
   none: 'None',
 };
 
+export const apiStyleDisplayName: Record<ApiStyle, string> = {
+  rest: 'REST',
+  graphql: 'GraphQL (Apollo)',
+  trpc: 'tRPC',
+};
+
 export const dockerDisplayName: Record<Docker, string> = {
   full: 'Docker (Full)',
   minimal: 'Docker (Minimal)',
@@ -194,6 +203,7 @@ export interface ProjectConfigOptions {
   packageManager?: PackageManager;
   gitInit?: boolean;
   githubFiles?: boolean;
+  apiStyle?: ApiStyle;
   docker?: Docker;
   i18n?: I18n;
   payments?: Payments;
@@ -220,6 +230,7 @@ export class ProjectConfig {
   readonly packageManager: PackageManager;
   readonly gitInit: boolean;
   readonly githubFiles: boolean;
+  readonly apiStyle: ApiStyle;
   readonly docker: Docker;
   readonly i18n: I18n;
   readonly payments: Payments;
@@ -247,6 +258,7 @@ export class ProjectConfig {
     this.packageManager = options.packageManager ?? 'pnpm';
     this.gitInit = options.gitInit ?? true;
     this.githubFiles = options.githubFiles ?? false;
+    this.apiStyle = options.apiStyle ?? 'rest';
     this.docker = options.docker ?? 'none';
     this.i18n = options.i18n ?? 'none';
     this.payments = options.payments ?? 'none';
@@ -296,6 +308,10 @@ export class ProjectConfig {
 
   get usesTailwind(): boolean {
     return this.styling === 'tailwind';
+  }
+
+  get hasApiStyle(): boolean {
+    return this.apiStyle !== 'rest';
   }
 
   get hasDocker(): boolean {
@@ -439,6 +455,19 @@ export class ProjectConfig {
     packages.push('zod');
 
     // ── v2.0 options ──
+
+    // API Style
+    if (this.apiStyle === 'graphql') {
+      packages.push('graphql', '@apollo/server');
+      if (this.backend === 'nestjs') {
+        packages.push('@nestjs/graphql', '@nestjs/apollo', 'class-validator', 'class-transformer');
+      } else {
+        packages.push('@as-integrations/express');
+      }
+    }
+    if (this.apiStyle === 'trpc') {
+      packages.push('@trpc/server', '@trpc/client', '@trpc/react-query', 'superjson');
+    }
 
     // i18n
     if (this.i18n === 'next-intl') packages.push('next-intl');

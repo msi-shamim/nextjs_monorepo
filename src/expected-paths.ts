@@ -101,6 +101,13 @@ export function getExpectedDirectories(config: ProjectConfig): string[] {
     if (config.backend === 'nestjs') dirs.push('apps/api/src/payments');
   }
   if (config.hasEmail) dirs.push('packages/email/src', 'packages/email/src/templates');
+  if (config.apiStyle === 'graphql') {
+    dirs.push('apps/api/src/graphql', 'apps/api/src/graphql/resolvers');
+    if (config.backend === 'nestjs') dirs.push('apps/api/src/graphql/models');
+  }
+  if (config.apiStyle === 'trpc') {
+    dirs.push('apps/api/src/trpc', 'apps/web/lib/trpc', 'apps/web/app/api/trpc/[trpc]');
+  }
   if (config.hasApiDocs) dirs.push('apps/api/src/docs');
   if (config.hasStorage) {
     dirs.push('packages/storage/src');
@@ -342,6 +349,32 @@ export function getExpectedFiles(config: ProjectConfig): string[] {
       'packages/email/package.json', 'packages/email/tsconfig.json',
       'packages/email/src/index.ts', 'packages/email/src/client.ts', 'packages/email/src/send.ts',
       'packages/email/src/templates/welcome.tsx', 'packages/email/src/templates/reset-password.tsx',
+    );
+  }
+
+  // API Style
+  if (config.apiStyle === 'graphql') {
+    files.push(
+      'apps/api/src/graphql/resolvers/health.resolver.ts',
+      'apps/api/src/graphql/README.md',
+    );
+    if (config.backend === 'nestjs') {
+      files.push('apps/api/src/graphql/graphql.module.ts', 'apps/api/src/graphql/models/health.model.ts');
+    } else {
+      files.push('apps/api/src/graphql/server.ts', 'apps/api/src/graphql/typeDefs.ts', 'apps/api/src/graphql/context.ts');
+    }
+  }
+  if (config.apiStyle === 'trpc') {
+    files.push(
+      'apps/api/src/trpc/trpc.ts',
+      'apps/api/src/trpc/router.ts',
+      'apps/api/src/trpc/context.ts',
+      'apps/api/src/trpc/adapter.ts',
+      'apps/api/src/trpc/README.md',
+      'apps/web/lib/trpc/client.ts',
+      'apps/web/lib/trpc/provider.tsx',
+      'apps/web/lib/trpc/server.ts',
+      'apps/web/app/api/trpc/[trpc]/route.ts',
     );
   }
 

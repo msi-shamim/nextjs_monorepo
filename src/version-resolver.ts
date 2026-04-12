@@ -82,6 +82,21 @@ const FALLBACK_VERSIONS: Record<string, string> = {
 
   // ── v2.0 options ──
 
+  // GraphQL
+  '@apollo/server': '^4.11.0',
+  graphql: '^16.10.0',
+  '@nestjs/graphql': '^13.0.0',
+  '@nestjs/apollo': '^13.0.0',
+  'class-validator': '^0.14.1',
+  'class-transformer': '^0.5.1',
+  '@as-integrations/express': '^3.0.0',
+
+  // tRPC
+  '@trpc/server': '^11.0.0',
+  '@trpc/client': '^11.0.0',
+  '@trpc/react-query': '^11.0.0',
+  superjson: '^2.2.2',
+
   // i18n
   'next-intl': '^4.1.0',
 

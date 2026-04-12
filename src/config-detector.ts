@@ -7,7 +7,7 @@
 import * as fs from 'node:fs';
 import * as path from 'node:path';
 import { ProjectConfig } from './project-config.js';
-import type { Backend, Styling, ORM, Database, Auth, StateManagement, PackageManager, LicenseType, Docker, I18n, Payments, Email, ApiDocs, Storage, E2e, Cache, Logging } from './project-config.js';
+import type { Backend, Styling, ORM, Database, Auth, StateManagement, PackageManager, LicenseType, ApiStyle, Docker, I18n, Payments, Email, ApiDocs, Storage, E2e, Cache, Logging } from './project-config.js';
 
 /** Attempt to detect project configuration from existing files */
 export function detectProjectConfig(rootPath: string): ProjectConfig | null {
@@ -43,6 +43,7 @@ export function detectProjectConfig(rootPath: string): ProjectConfig | null {
     gitInit: false,
     githubFiles,
     license,
+    apiStyle: detectApiStyleOption(rootPath),
     docker: detectDocker(rootPath),
     i18n: detectI18n(rootPath),
     payments: detectPayments(rootPath),
@@ -218,6 +219,12 @@ function detectLicense(rootPath: string): LicenseType {
 }
 
 // ── v2.0 option detectors ────────────────────────────────────────
+
+function detectApiStyleOption(rootPath: string): ApiStyle {
+  if (fs.existsSync(path.join(rootPath, 'apps/api/src/trpc/router.ts'))) return 'trpc';
+  if (fs.existsSync(path.join(rootPath, 'apps/api/src/graphql'))) return 'graphql';
+  return 'rest';
+}
 
 function detectDocker(rootPath: string): Docker {
   if (fs.existsSync(path.join(rootPath, 'nginx/nginx.conf'))) return 'full';

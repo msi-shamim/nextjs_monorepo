@@ -36,8 +36,9 @@ import { createEmailStrategy } from './templates/strategies/email-factory.js';
 import { createStorageStrategy } from './templates/strategies/storage-factory.js';
 import { createPaymentStrategy } from './templates/strategies/payment-factory.js';
 import { createApiDocsStrategy } from './templates/strategies/api-docs-factory.js';
+import { createApiStyleStrategy } from './templates/strategies/api-style-factory.js';
 
-const TOTAL_STEPS = 26;
+const TOTAL_STEPS = 27;
 
 export class Generator {
   private rootPath: string;
@@ -69,16 +70,17 @@ export class Generator {
     this.writeNextjsApp();                 // Step 14
     this.writeI18nLayer();                 // Step 15
     this.writeBackendApp();                // Step 16
-    this.writeApiDocs();                   // Step 17
-    this.writeLoggingLayer();              // Step 18
-    this.writeAuthLayer();                 // Step 19
-    this.writeDockerFiles();               // Step 20
-    this.writeStorybookConfig();           // Step 21
-    this.writeE2eTests();                  // Step 22
-    this.writeSkills();                    // Step 23
-    await this.installDependencies();      // Step 24
-    await this.initializeGit();            // Step 25
-    this.printSummary();                   // Step 26
+    this.writeApiStyleLayer();             // Step 17
+    this.writeApiDocs();                   // Step 18
+    this.writeLoggingLayer();              // Step 19
+    this.writeAuthLayer();                 // Step 20
+    this.writeDockerFiles();               // Step 21
+    this.writeStorybookConfig();           // Step 22
+    this.writeE2eTests();                  // Step 23
+    this.writeSkills();                    // Step 24
+    await this.installDependencies();      // Step 25
+    await this.initializeGit();            // Step 26
+    this.printSummary();                   // Step 27
   }
 
   // ── Step 1: Resolve versions ─────────────────────────────────────
@@ -405,14 +407,43 @@ export class Generator {
     logger.success(`${this.config.backend === 'nestjs' ? 'NestJS' : 'Express'} backend written`);
   }
 
-  // ── Step 17: Write API docs ──────────────────────────────────────
+  // ── Step 17: Write API style layer ────────────────────────────────
+
+  private writeApiStyleLayer(): void {
+    if (!this.config.hasApiStyle) {
+      logger.step(17, TOTAL_STEPS, 'Skipping API style layer (--api-style rest)');
+      return;
+    }
+    logger.step(17, TOTAL_STEPS, `Writing ${this.config.apiStyle} API layer...`);
+    const strategy = createApiStyleStrategy(this.config.apiStyle, this.config.backend);
+    if (!strategy) return;
+
+    // Write server files
+    const serverFiles = strategy.serverFiles(this.config);
+    for (const [filePath, content] of Object.entries(serverFiles)) {
+      this.write(filePath, content);
+    }
+
+    // Write client files (tRPC Next.js integration)
+    const clientFiles = strategy.clientFiles(this.config);
+    for (const [filePath, content] of Object.entries(clientFiles)) {
+      this.write(filePath, content);
+    }
+
+    // Write setup instructions
+    this.write(`apps/api/src/${this.config.apiStyle}/README.md`, strategy.setupInstructions(this.config));
+
+    logger.success(`${this.config.apiStyle === 'graphql' ? 'GraphQL (Apollo)' : 'tRPC'} layer written`);
+  }
+
+  // ── Step 18: Write API docs ──────────────────────────────────────
 
   private writeApiDocs(): void {
     if (!this.config.hasApiDocs) {
-      logger.step(17, TOTAL_STEPS, 'Skipping API docs (--api-docs none)');
+      logger.step(18, TOTAL_STEPS, 'Skipping API docs (--api-docs none)');
       return;
     }
-    logger.step(17, TOTAL_STEPS, `Writing API docs (${this.config.apiDocs})...`);
+    logger.step(18, TOTAL_STEPS, `Writing API docs (${this.config.apiDocs})...`);
     const strategy = createApiDocsStrategy(this.config.apiDocs);
     if (!strategy) return;
     this.write('apps/api/src/docs/swagger-config.ts', strategy.docsConfig(this.config));
@@ -424,10 +455,10 @@ export class Generator {
 
   private writeLoggingLayer(): void {
     if (!this.config.hasLogging) {
-      logger.step(18, TOTAL_STEPS, 'Skipping logging (--logging default)');
+      logger.step(19, TOTAL_STEPS, 'Skipping logging (--logging default)');
       return;
     }
-    logger.step(18, TOTAL_STEPS, `Writing logging layer (${this.config.logging})...`);
+    logger.step(19, TOTAL_STEPS, `Writing logging layer (${this.config.logging})...`);
     const strategy = createLoggingStrategy(this.config.logging);
     if (!strategy) return;
     this.write('packages/lib/src/logger/index.ts', strategy.index(this.config));
@@ -439,10 +470,10 @@ export class Generator {
 
   private writeAuthLayer(): void {
     if (!this.config.hasAuth) {
-      logger.step(19, TOTAL_STEPS, 'Skipping auth layer (--auth none)');
+      logger.step(20, TOTAL_STEPS, 'Skipping auth layer (--auth none)');
       return;
     }
-    logger.step(19, TOTAL_STEPS, `Writing ${this.config.auth} auth layer...`);
+    logger.step(20, TOTAL_STEPS, `Writing ${this.config.auth} auth layer...`);
     const authStrategy = createAuthStrategy(this.config.auth);
     if (!authStrategy) return;
     if (this.config.auth === 'next-auth') {
@@ -463,10 +494,10 @@ export class Generator {
 
   private writeDockerFiles(): void {
     if (!this.config.hasDocker) {
-      logger.step(20, TOTAL_STEPS, 'Skipping Docker files (--docker none)');
+      logger.step(21, TOTAL_STEPS, 'Skipping Docker files (--docker none)');
       return;
     }
-    logger.step(20, TOTAL_STEPS, `Writing Docker files (${this.config.docker})...`);
+    logger.step(21, TOTAL_STEPS, `Writing Docker files (${this.config.docker})...`);
     const strategy = createDockerStrategy(this.config.docker);
     if (!strategy) return;
     this.write('apps/web/Dockerfile', strategy.webDockerfile(this.config));
@@ -484,10 +515,10 @@ export class Generator {
 
   private writeStorybookConfig(): void {
     if (!this.config.storybook) {
-      logger.step(21, TOTAL_STEPS, 'Skipping Storybook (--no-storybook)');
+      logger.step(22, TOTAL_STEPS, 'Skipping Storybook (--no-storybook)');
       return;
     }
-    logger.step(21, TOTAL_STEPS, 'Writing Storybook config...');
+    logger.step(22, TOTAL_STEPS, 'Writing Storybook config...');
     this.write('packages/ui/.storybook/main.ts', storybookTmpl.storybookMain(this.config));
     this.write('packages/ui/.storybook/preview.ts', storybookTmpl.storybookPreview(this.config));
     this.write('packages/ui/src/components/button.stories.tsx', storybookTmpl.buttonStories(this.config));
@@ -500,10 +531,10 @@ export class Generator {
 
   private writeE2eTests(): void {
     if (!this.config.hasE2e) {
-      logger.step(22, TOTAL_STEPS, 'Skipping E2E tests (--e2e none)');
+      logger.step(23, TOTAL_STEPS, 'Skipping E2E tests (--e2e none)');
       return;
     }
-    logger.step(22, TOTAL_STEPS, `Writing E2E tests (${this.config.e2e})...`);
+    logger.step(23, TOTAL_STEPS, `Writing E2E tests (${this.config.e2e})...`);
     const strategy = createE2eStrategy(this.config.e2e);
     if (!strategy) return;
     if (this.config.e2e === 'playwright') {
@@ -519,7 +550,7 @@ export class Generator {
   // ── Step 23: Write AI skills ─────────────────────────────────────
 
   private writeSkills(): void {
-    logger.step(23, TOTAL_STEPS, 'Writing AI agent skills...');
+    logger.step(24, TOTAL_STEPS, 'Writing AI agent skills...');
     this.write('.claude/settings.json', skills.claudeSettings(this.config));
     this.write('.claude/skills/component-design/SKILL.md', skills.componentDesignSkill(this.config));
     this.write('.claude/skills/page-design/SKILL.md', skills.pageDesignSkill(this.config));
@@ -531,7 +562,7 @@ export class Generator {
   // ── Step 24: Install dependencies ────────────────────────────────
 
   private async installDependencies(): Promise<void> {
-    logger.step(24, TOTAL_STEPS, `Installing dependencies (${this.config.packageManager})...`);
+    logger.step(25, TOTAL_STEPS, `Installing dependencies (${this.config.packageManager})...`);
     try {
       execSync(this.config.installCommand, { cwd: this.rootPath, stdio: 'pipe', timeout: 120_000 });
       logger.success('Dependencies installed');
@@ -544,10 +575,10 @@ export class Generator {
 
   private async initializeGit(): Promise<void> {
     if (!this.config.gitInit) {
-      logger.step(25, TOTAL_STEPS, 'Skipping git init (--no-git)');
+      logger.step(26, TOTAL_STEPS, 'Skipping git init (--no-git)');
       return;
     }
-    logger.step(25, TOTAL_STEPS, 'Initializing git repository...');
+    logger.step(26, TOTAL_STEPS, 'Initializing git repository...');
     try {
       execSync('git init', { cwd: this.rootPath, stdio: 'pipe' });
       execSync('git add .', { cwd: this.rootPath, stdio: 'pipe' });
@@ -561,7 +592,7 @@ export class Generator {
   // ── Step 26: Print summary ───────────────────────────────────────
 
   private printSummary(): void {
-    logger.step(26, TOTAL_STEPS, 'Done!');
+    logger.step(27, TOTAL_STEPS, 'Done!');
     logger.summary([
       `${this.config.pascalCase} monorepo created successfully!`,
       '',
