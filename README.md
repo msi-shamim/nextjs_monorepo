@@ -3,8 +3,12 @@
 Generate **production-ready Next.js + NestJS/Express monorepos** with Turborepo in one command.
 
 [![npm version](https://img.shields.io/npm/v/@msishamim/create-next-monorepo)](https://www.npmjs.com/package/@msishamim/create-next-monorepo)
+[![npm downloads](https://img.shields.io/npm/dm/@msishamim/create-next-monorepo)](https://www.npmjs.com/package/@msishamim/create-next-monorepo)
 [![license](https://img.shields.io/npm/l/@msishamim/create-next-monorepo)](LICENSE)
 [![node](https://img.shields.io/node/v/@msishamim/create-next-monorepo)](https://nodejs.org)
+[![TypeScript](https://img.shields.io/badge/TypeScript-strict-blue?logo=typescript&logoColor=white)](https://www.typescriptlang.org/)
+[![GitHub issues](https://img.shields.io/github/issues/msi-shamim/nextjs_monorepo)](https://github.com/msi-shamim/nextjs_monorepo/issues)
+[![GitHub stars](https://img.shields.io/github/stars/msi-shamim/nextjs_monorepo?style=social)](https://github.com/msi-shamim/nextjs_monorepo)
 
 ---
 
