@@ -2,7 +2,16 @@
 
 All notable changes to this project will be documented in this file.
 
-## 2.1.0 (2026-04-12)
+## 2.2.0 (2026-04-12)
+
+### Fully Adaptive Docker Templates
+
+Docker output now adapts to **every** selected option:
+
+- **Dockerfiles** — Package manager install commands (pnpm/npm/yarn/bun), Prisma generate + schema copy, dynamic workspace COPY lines based on enabled packages, health checks
+- **docker-compose.prod.yml** — Correct DB service (postgres/mysql/mongodb) with health checks and volumes, Redis with REDIS_URL, all env vars wired (auth, email, storage, payments), proper `depends_on` chains
+- **nginx.conf** — GraphQL `/graphql` and tRPC `/api/trpc` routing with WebSocket upgrade, `/api/docs` proxy, gzip compression, security headers
+- **.dockerignore** — Package-manager-aware (ignores unused lock files)
 
 ### New Option
 

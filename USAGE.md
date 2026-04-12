@@ -110,6 +110,58 @@ End-to-end type-safe RPC. No schema generation, no code generation — just Type
 
 ---
 
+## Docker Deployment
+
+Docker templates are **fully adaptive** — they adjust to every option you've selected.
+
+### Full mode (`--docker full`)
+
+Generates multi-stage Dockerfiles, docker-compose.prod.yml with nginx reverse proxy, health checks, and all services:
+
+```bash
+npx @msishamim/create-next-monorepo my-app \
+  --docker full \
+  --orm prisma --db postgres \
+  --cache redis \
+  --api-style graphql
+```
+
+**What gets generated:**
+- `apps/web/Dockerfile` — Multi-stage (deps → build → runner), copies correct workspace packages, Prisma generate if needed
+- `apps/api/Dockerfile` — Multi-stage, backend-aware build (NestJS/Express), Prisma schema copy, health check
+- `docker-compose.prod.yml` — Web + API + DB (postgres/mysql/mongodb) + Redis + nginx, all env vars wired, health checks, named volumes
+- `nginx/nginx.conf` — Reverse proxy with GraphQL/tRPC/API docs routing, WebSocket upgrade, gzip, security headers
+- `.dockerignore` — Package-manager-aware
+
+**Adaptive to these options:**
+
+| Option | How Docker adapts |
+|--------|------------------|
+| `--backend` | API build command (NestJS vs Express) |
+| `--package-manager` | Install commands, lock files, corepack setup |
+| `--orm prisma` | `prisma generate` in build, schema copy to runner |
+| `--db` | Correct DB service + port + env vars + health check |
+| `--cache redis` | Redis service, `REDIS_URL` env var |
+| `--api-style graphql` | nginx `/graphql` route with WebSocket |
+| `--api-style trpc` | nginx `/api/trpc` route with WebSocket |
+| `--api-docs` | nginx `/api/docs` route |
+| `--auth` | `AUTH_SECRET` or `JWT_SECRET` env vars |
+| `--email` | `RESEND_API_KEY`, `SMTP_*`, or `SENDGRID_API_KEY` |
+| `--storage` | `AWS_*`, `UPLOADTHING_*`, or `CLOUDINARY_*` env vars |
+| `--payments` | `STRIPE_*`, `LEMONSQUEEZY_*`, or `PADDLE_*` env vars |
+
+### Minimal mode (`--docker minimal`)
+
+Simple single-stage Dockerfiles + basic docker-compose (no nginx, no multi-stage):
+
+```bash
+npx @msishamim/create-next-monorepo my-app --docker minimal
+```
+
+Still adaptive to DB service, Redis, Prisma, and package manager — just simpler Dockerfiles.
+
+---
+
 ## Backend Comparison
 
 ### NestJS

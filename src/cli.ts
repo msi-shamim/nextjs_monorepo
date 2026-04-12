@@ -12,7 +12,7 @@ import { Doctor } from './doctor.js';
 import { Workflow } from './workflow.js';
 import { logger } from './logger.js';
 
-const VERSION = '2.1.0';
+const VERSION = '2.2.0';
 
 const program = new Command();
 

@@ -24,6 +24,7 @@ Generate **production-ready Next.js + NestJS/Express monorepos** with Turborepo 
 - **Workflow guides** — step-by-step dev guides for components, pages, and API features
 - **AI agent skills** — Claude Code skills + pre-approved settings for every project
 - **GitHub files** — CI workflow, issue/PR templates, code of conduct (optional)
+- **Docker** — Fully adaptive Dockerfiles, docker-compose.prod.yml with correct DB/Redis/nginx, health checks
 - **11 license types** — MIT, Apache-2.0, GPL, BSD, ISC, Unlicense, proprietary, and more
 - **Production linting** — strict TypeScript, ESLint flat config, Prettier
 
